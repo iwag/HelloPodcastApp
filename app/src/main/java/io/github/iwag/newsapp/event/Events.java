@@ -1,4 +1,4 @@
-package io.github.iwag.newsapp;
+package io.github.iwag.newsapp.event;
 
 import io.github.iwag.newsapp.dummy.NewsContent;
 

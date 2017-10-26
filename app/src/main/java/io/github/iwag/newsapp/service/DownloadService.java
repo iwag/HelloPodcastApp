@@ -1,4 +1,4 @@
-package io.github.iwag.newsapp;
+package io.github.iwag.newsapp.service;
 
 import android.app.DownloadManager;
 import android.content.Context;

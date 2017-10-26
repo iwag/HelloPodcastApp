@@ -1,4 +1,4 @@
-package io.github.iwag.newsapp;
+package io.github.iwag.newsapp.event;
 
 import org.greenrobot.eventbus.EventBus;
 

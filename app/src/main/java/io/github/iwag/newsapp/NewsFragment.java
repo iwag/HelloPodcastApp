@@ -14,6 +14,8 @@ import org.greenrobot.eventbus.Subscribe;
 
 import io.github.iwag.newsapp.dummy.NewsContent;
 import io.github.iwag.newsapp.dummy.NewsContent.NewsItem;
+import io.github.iwag.newsapp.event.Events;
+import io.github.iwag.newsapp.event.GlobalBus;
 
 import java.util.LinkedList;
 

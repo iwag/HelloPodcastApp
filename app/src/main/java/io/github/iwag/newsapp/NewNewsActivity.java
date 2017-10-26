@@ -7,13 +7,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import org.greenrobot.eventbus.Subscribe;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Objects;
 
 import io.github.iwag.newsapp.dummy.NewsContent;
+import io.github.iwag.newsapp.event.Events;
+import io.github.iwag.newsapp.event.GlobalBus;
 
 public class NewNewsActivity extends AppCompatActivity {
 

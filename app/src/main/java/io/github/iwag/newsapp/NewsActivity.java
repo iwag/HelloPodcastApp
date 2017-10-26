@@ -12,6 +12,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import io.github.iwag.newsapp.dummy.NewsContent;
+import io.github.iwag.newsapp.event.Events;
+import io.github.iwag.newsapp.event.GlobalBus;
+import io.github.iwag.newsapp.service.DownloadService;
 
 public class NewsActivity extends AppCompatActivity implements NewsFragment.OnListFragmentInteractionListener {
     public static final int RESULT_NEW_NEWS_REQUEST = 0;
