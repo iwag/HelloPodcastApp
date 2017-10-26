@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+
 import io.github.iwag.newsapp.dummy.NewsContent;
 
 
@@ -28,6 +30,7 @@ public class NewNewsFragment extends Fragment {
     public static final String DATA_IMAGE_URL2 = "5";
     public static final String DATA_LIKES = "6";
     public static final String DATA_COMMENTS = "7";
+    public static final String DATA_KIND = "8";
 
     public NewNewsFragment() {
         // Required empty public constructor
@@ -42,10 +45,9 @@ public class NewNewsFragment extends Fragment {
 
         final Bundle bundle = getArguments();
         NewsContent.NewsItem content = new NewsContent.NewsItem(bundle.getString(DATA_USER),
-                bundle.getString(DATA_BODY), "", bundle.getString(DATA_DATE),
+                bundle.getString(DATA_BODY), "", bundle.getLong(DATA_DATE),
                 bundle.getString(DATA_ICON_URL), bundle.getString(DATA_IMAGE_URL1), bundle.getString(DATA_IMAGE_URL2),
                 bundle.getInt(DATA_LIKES), bundle.getInt(DATA_COMMENTS));
-
 
         ImageView iconImageView = view.findViewById(R.id.icon_image_view);
         ImageView photoImageView1 = view.findViewById(R.id.photo_image_view1);
@@ -60,7 +62,7 @@ public class NewNewsFragment extends Fragment {
         TextView bodyTextView = view.findViewById(R.id.news_body_text_view);
 
         nameTextView.setText(content.id);
-        dateTextView.setText(content.date);
+        dateTextView.setText((new SimpleDateFormat("yyyy MMM dd").format(content.date))); // TODO simple date format
         bodyTextView.setText(content.content);
 
         return view;

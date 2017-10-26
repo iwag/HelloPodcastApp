@@ -5,16 +5,20 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+
+import org.greenrobot.eventbus.Subscribe;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Objects;
+
+import io.github.iwag.newsapp.dummy.NewsContent;
 
 public class NewNewsActivity extends AppCompatActivity {
 
     public static final String RESULT_NEW_NEWS = "aaa";
-    private static final String ICON_URL = "https://scontent-sea1-1.cdninstagram.com/t51.2885-19/s320x320/22280759_695713487292785_369321441759330304_n.jpg";
-    private static final String IMAGE_URL1 = "https://scontent-sea1-1.cdninstagram.com/t51.2885-15/e35/21148909_120267078631623_6907529347343581184_n.jpg";
-    private static final String IMAGE_URL2 = "https://scontent-sea1-1.cdninstagram.com/t51.2885-15/e35/20986799_1992945870918662_4501813870163132416_n.jpg";
-    private static final String USER = "gammi";
-    private static final String DATE = "Sep 11, 2017";
-    private static final String BODY = "Eating a curry";
+    public static final String RESULT_EMPTY = "empty";
 
     private Bundle mBundle;
 
@@ -36,34 +40,60 @@ public class NewNewsActivity extends AppCompatActivity {
             // Create a new Fragment to be placed in the activity layout
             NewNewsFragment firstFragment = new NewNewsFragment();
 
+
             // In case this activity was started with special instructions from an
             // Intent, pass the Intent's extras to the fragment as arguments
-            Intent intent = getIntent();
-            intent.putExtra(NewNewsFragment.DATA_USER, USER);
-            intent.putExtra(NewNewsFragment.DATA_DATE, DATE);
-            intent.putExtra(NewNewsFragment.DATA_BODY, BODY);
-            intent.putExtra(NewNewsFragment.DATA_ICON_URL, ICON_URL);
-            intent.putExtra(NewNewsFragment.DATA_IMAGE_URL1, IMAGE_URL1);
-            intent.putExtra(NewNewsFragment.DATA_IMAGE_URL2, IMAGE_URL2);
-            intent.putExtra(NewNewsFragment.DATA_LIKES, 2);
-            intent.putExtra(NewNewsFragment.DATA_COMMENTS, 3);
-            mBundle = intent.getExtras();
 
-            firstFragment.setArguments(intent.getExtras());
+            firstFragment.setArguments(getIntent().getExtras());
 
             // Add the fragment to the 'fragment_container' FrameLayout
             getFragmentManager().beginTransaction()
                     .add(R.id.fragment_container2, firstFragment).commit();
         }
 
+        Intent intent = getIntent();
+        Button saveButton = (Button) findViewById(R.id.save_news_button);
+        if (intent != null && saveButton != null) {
+            if (Objects.equals(intent.getExtras().getString(NewNewsFragment.DATA_KIND), "detail")) {
+                saveButton.setText("Close");
+                saveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(RESULT_EMPTY);
+                        setResult(Activity.RESULT_OK, intent);
+                        finish();
+                    }
+                });
+            } else { // "save"
+                saveButton.setText("Save");
+                saveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        doSave(view);
+                    }
+                });
+
+            }
+            mBundle = intent.getExtras();
+        }
     }
 
-    public void doSave(View view) {
 
-        Intent intent = new Intent(RESULT_NEW_NEWS);
-        intent.putExtras(mBundle);
-        setResult(Activity.RESULT_OK, intent);
-        finish();
+        public void doSave(View view) {
+            NewsContent.NewsItem news = new NewsContent.NewsItem(mBundle.getString(NewNewsFragment.DATA_USER),
+                    mBundle.getString(NewNewsFragment.DATA_BODY), "", mBundle.getLong(NewNewsFragment.DATA_DATE),
+                    mBundle.getString(NewNewsFragment.DATA_ICON_URL), mBundle.getString(NewNewsFragment.DATA_IMAGE_URL1), mBundle.getString(NewNewsFragment.DATA_IMAGE_URL2),
+                    mBundle.getInt(NewNewsFragment.DATA_LIKES), mBundle.getInt(NewNewsFragment.DATA_COMMENTS));
+
+
+            Events.NewsFragmentAddMessage message =
+                    new Events.NewsFragmentAddMessage(news);
+
+            GlobalBus.getBus().post(message);
+
+            Intent intent = new Intent(RESULT_NEW_NEWS);
+            setResult(Activity.RESULT_OK, intent);
+            finish();
     }
 
 }

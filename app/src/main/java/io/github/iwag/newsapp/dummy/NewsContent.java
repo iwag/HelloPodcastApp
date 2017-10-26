@@ -1,9 +1,12 @@
 package io.github.iwag.newsapp.dummy;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -25,6 +28,8 @@ public class NewsContent {
 
     private static final int COUNT = 25;
 
+    private static final Random random = new Random();
+
     static {
         // Add some sample items.
         for (int i = 1; i <= COUNT; i++) {
@@ -39,13 +44,13 @@ public class NewsContent {
 
     public static NewsItem createNewsItem(int position) {
         String userName = "User" + String.valueOf(position);
-        String date = "Oct " + position + " 2017";
+        Date datee = new Date(2017-1900-random.nextInt(10), 10, position);
         String iconUrl = "http://www.edamam.com/web-img/5f5/5f51c89f832d50da84e3c05bef3f66f9.jpg";
         String imageUrl1 = "https://www.edamam.com/web-img/341/3417c234dadb687c0d3a45345e86bff4.jpg";
         String imageUrl2 = "https://www.edamam.com/web-img/c7d/c7d9644d5e696ec0a99af1563d3f3fc3.jpg";
         int likes = 3;
         int comments = 2;
-        return new NewsItem(userName, "Content " + position, makeDetails(position), date, iconUrl, imageUrl1, imageUrl2, likes, comments);
+        return new NewsItem(userName, "Content " + position, makeDetails(position), datee, iconUrl, imageUrl1, imageUrl2, likes, comments);
     }
 
     private static String makeDetails(int position) {
@@ -64,14 +69,16 @@ public class NewsContent {
         public final String id;
         public final String content;
         public final String details;
-        public final String date;
+        public final Date date;
         public final String iconUrl;
         public final String imageUrl1;
         public final String imageUrl2;
         public final Integer likes;
         public final Integer comments;
 
-        public NewsItem(String id, String content, String details, String date, String iconUrl, String imageUrl1, String imageUrl2, Integer likes, Integer comments) {
+        static SimpleDateFormat SMD = new SimpleDateFormat("yyyy-MM-dd hh:mm:dd");
+
+        public NewsItem(String id, String content, String details, Date date, String iconUrl, String imageUrl1, String imageUrl2, Integer likes, Integer comments) {
             this.id = id;
             this.content = content;
             this.details = details;
@@ -82,6 +89,19 @@ public class NewsContent {
             this.likes = likes;
             this.comments = comments;
         }
+
+        public NewsItem(String id, String content, String details, Long longDate, String iconUrl, String imageUrl1, String imageUrl2, Integer likes, Integer comments) {
+            this.id = id;
+            this.content = content;
+            this.details = details;
+            this.date = new Date(longDate);
+            this.iconUrl = iconUrl;
+            this.imageUrl1 = imageUrl1;
+            this.imageUrl2 = imageUrl2;
+            this.likes = likes;
+            this.comments = comments;
+        }
+
 
         @Override
         public String toString() {

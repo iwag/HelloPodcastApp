@@ -1,21 +1,42 @@
 package io.github.iwag.newsapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+
+import org.greenrobot.eventbus.Subscribe;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import io.github.iwag.newsapp.dummy.NewsContent;
 
 public class NewsActivity extends AppCompatActivity implements NewsFragment.OnListFragmentInteractionListener {
     public static final int RESULT_NEW_NEWS_REQUEST = 0;
+    public static final int RESULT_DETAIL_NEWS_REQUEST = 1;
+    public static final int RESULT_START_MUSIC = 2;
+
+    private static final String ICON_URL = "https://scontent-sea1-1.cdninstagram.com/t51.2885-19/s320x320/22280759_695713487292785_369321441759330304_n.jpg";
+    private static final String IMAGE_URL1 = "https://scontent-sea1-1.cdninstagram.com/t51.2885-15/e35/21148909_120267078631623_6907529347343581184_n.jpg";
+    private static final String IMAGE_URL2 = "https://scontent-sea1-1.cdninstagram.com/t51.2885-15/e35/20986799_1992945870918662_4501813870163132416_n.jpg";
+    private static final String USER = "gammi";
+    private static final String DATE_STRING = "2017-10-10 10:00:00";
+    private static final String BODY = "Eating a curry";
+
+    private Long mDownloadId;
 
     NewsFragment newsFragment;
+    private DownloadService mDownloadService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
+
+        mDownloadId = null;
+        mDownloadService = new DownloadService();
 
 
         // Check that the activity is using the layout version with
@@ -45,15 +66,42 @@ public class NewsActivity extends AppCompatActivity implements NewsFragment.OnLi
 
     public void doAdd(View view) {
         Intent intent = new Intent(this, NewNewsActivity.class);
-        startActivityForResult(intent, RESULT_NEW_NEWS_REQUEST);
 
-//        NewNewsFragment fragment = new NewNewsFragment();
-//        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//        transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_from_right);
-//        transaction.replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+        Long timestamp = null;
+        try {
+            timestamp = (new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).parse(DATE_STRING).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        intent.putExtra(NewNewsFragment.DATA_USER, USER);
+        intent.putExtra(NewNewsFragment.DATA_DATE, timestamp);
+        intent.putExtra(NewNewsFragment.DATA_BODY, BODY);
+        intent.putExtra(NewNewsFragment.DATA_ICON_URL, ICON_URL);
+        intent.putExtra(NewNewsFragment.DATA_IMAGE_URL1, IMAGE_URL1);
+        intent.putExtra(NewNewsFragment.DATA_IMAGE_URL2, IMAGE_URL2);
+        intent.putExtra(NewNewsFragment.DATA_LIKES, 2);
+        intent.putExtra(NewNewsFragment.DATA_COMMENTS, 3);
+
+        // download
+        Long id = mDownloadService.downloadFile(this, "http://cache.rebuild.fm/podcast-ep168.mp3");
+        mDownloadId = id;
+
+        startActivityForResult(intent, RESULT_NEW_NEWS_REQUEST);
     }
 
     public void doLoad(View view) {
+        Intent intent = new Intent(this, PlayerActivity.class);
+
+        if (mDownloadId != null) {
+            Uri uri = mDownloadService.getDownloadUri(this, mDownloadId);
+            if (uri == null) return;
+            intent.putExtra("url", uri.toString());
+            startActivityForResult(intent, RESULT_START_MUSIC);
+        }
+    }
+
+    public void doLoad2(View view) {
         if (newsFragment!=null) {
             newsFragment.loadNews();
         }
@@ -67,17 +115,43 @@ public class NewsActivity extends AppCompatActivity implements NewsFragment.OnLi
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RESULT_NEW_NEWS_REQUEST) {
-            // Make sure the request was successful
-            if (resultCode == RESULT_OK) {
-                Bundle bundle = data.getExtras();
-                NewsContent.NewsItem item = new NewsContent.NewsItem(bundle.getString(NewNewsFragment.DATA_USER),
-                        bundle.getString(NewNewsFragment.DATA_BODY), "", bundle.getString(NewNewsFragment.DATA_DATE),
-                        bundle.getString(NewNewsFragment.DATA_ICON_URL), bundle.getString(NewNewsFragment.DATA_IMAGE_URL1), bundle.getString(NewNewsFragment.DATA_IMAGE_URL2),
-                        bundle.getInt(NewNewsFragment.DATA_LIKES), bundle.getInt(NewNewsFragment.DATA_COMMENTS));
-
-                newsFragment.addNews(item);
-            }
+        // Make sure the request was successful
+        if (requestCode == RESULT_NEW_NEWS_REQUEST && resultCode == RESULT_OK) {
         }
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        GlobalBus.getBus().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        GlobalBus.getBus().unregister(this);
+    }
+
+    @Subscribe
+    public void callbackAddMessage(Events.NewsFragmentAddMessage message) {
+        newsFragment.addNews(message.getNews());
+    }
+
+    @Subscribe
+    public void callbackClickMessage(Events.NewsFragmentClickMessage message) {
+        Intent intent = new Intent(this, NewNewsActivity.class);
+
+        intent.putExtra(NewNewsFragment.DATA_USER, message.getNews().id);
+        intent.putExtra(NewNewsFragment.DATA_DATE, message.getNews().date.getTime());
+        intent.putExtra(NewNewsFragment.DATA_BODY, message.getNews().content);
+        intent.putExtra(NewNewsFragment.DATA_ICON_URL, message.getNews().iconUrl);
+        intent.putExtra(NewNewsFragment.DATA_IMAGE_URL1, message.getNews().imageUrl1);
+        intent.putExtra(NewNewsFragment.DATA_IMAGE_URL2, message.getNews().imageUrl2);
+        intent.putExtra(NewNewsFragment.DATA_LIKES, message.getNews().likes);
+        intent.putExtra(NewNewsFragment.DATA_COMMENTS, message.getNews().comments);
+        intent.putExtra(NewNewsFragment.DATA_KIND, "detail");
+
+        startActivityForResult(intent, RESULT_DETAIL_NEWS_REQUEST);
+    }
+
 }

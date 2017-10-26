@@ -9,8 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.Toast;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import io.github.iwag.newsapp.dummy.NewsContent;
 import io.github.iwag.newsapp.dummy.NewsContent.NewsItem;
@@ -31,8 +31,7 @@ public class NewsFragment extends Fragment {
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private NewsRecyclerViewAdapter mAdapter;
-
-
+    private final int LOAD_COUNT = 10;
 
     public interface NewsFragmentClickListener {
         void onClick(View view, int position);
@@ -71,11 +70,15 @@ public class NewsFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
+            GridLayoutManager manager = new GridLayoutManager(context, mColumnCount);
+            recyclerView.setLayoutManager(manager);
+
+//            mAdapter = new NewsRecyclerViewAdapter(getContext(), new LinkedList<NewsItem>(), mListener);
+//            mAdapter.setLayoutManager(manager);
+//            mAdapter.shouldShowHeadersForEmptySections(true);
+//            mAdapter.shouldShowFooters(true);
+//            recyclerView.setAdapter(mAdapter);
+
             mAdapter = new NewsRecyclerViewAdapter(getContext(), new LinkedList<NewsItem>(), mListener);
 
             recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
@@ -84,7 +87,12 @@ public class NewsFragment extends Fragment {
                 @Override
                 public void onClick(View view, int position) {
                     NewsItem news = mAdapter.getNews(position);
-                    Toast.makeText(getActivity(), news.content + " is selected!", Toast.LENGTH_SHORT).show();
+
+                    Events.NewsFragmentClickMessage newsFragmentClickMessageEvent =
+                            new Events.NewsFragmentClickMessage(news);
+
+                    GlobalBus.getBus().post(newsFragmentClickMessageEvent);
+
                 }
 
                 @Override
@@ -94,11 +102,22 @@ public class NewsFragment extends Fragment {
             }));
 
             recyclerView.setAdapter(mAdapter);
-//            recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
         }
         return view;
     }
 
+
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        GlobalBus.getBus().register(this);
+//    }
+//
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        GlobalBus.getBus().unregister(this);
+//    }
 
     @Override
     public void onAttach(Context context) {
@@ -124,13 +143,31 @@ public class NewsFragment extends Fragment {
 
     public void loadNews() {
         if (mAdapter != null) {
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < LOAD_COUNT; i++) {
                 NewsItem news = NewsContent.createNewsItem(i);
                 mAdapter.addItem(news);
             }
             mAdapter.notifyDataSetChanged();
         }
     }
+
+    @Subscribe
+    public void callbackRemoveMessage(Events.NewsFragmentRemoveMessage message) {
+        mAdapter.removeAt(message.getIndex());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        GlobalBus.getBus().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        GlobalBus.getBus().unregister(this);
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this

@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:text="Save"
         android:layout_alignParentBottom="true"
-        android:onClick="doSave"/>
+        />
 
 
 </RelativeLayout>
