@@ -1,6 +1,7 @@
 package io.github.iwag.newsapp.event;
 
 import io.github.iwag.newsapp.dummy.NewsContent;
+import io.github.iwag.newsapp.models.FeedItem;
 
 public class Events {
 
@@ -17,13 +18,13 @@ public class Events {
     }
 
     public static class NewsFragmentClickMessage {
-        private final NewsContent.NewsItem news;
+        private final FeedItem news;
 
-        public NewsFragmentClickMessage(NewsContent.NewsItem news) {
+        public NewsFragmentClickMessage(FeedItem news) {
             this.news = news;
         }
 
-        public NewsContent.NewsItem getNews() {
+        public FeedItem getNews() {
             return news;
         }
     }

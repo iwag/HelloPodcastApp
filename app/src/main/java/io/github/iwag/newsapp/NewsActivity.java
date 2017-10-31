@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -14,7 +15,14 @@ import java.text.SimpleDateFormat;
 import io.github.iwag.newsapp.dummy.NewsContent;
 import io.github.iwag.newsapp.event.Events;
 import io.github.iwag.newsapp.event.GlobalBus;
+import io.github.iwag.newsapp.infra.PodcastFeedAPIClient;
+import io.github.iwag.newsapp.infra.PodcastFeedApiService;
+import io.github.iwag.newsapp.models.FeedItem;
+import io.github.iwag.newsapp.models.Rss;
 import io.github.iwag.newsapp.service.DownloadService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class NewsActivity extends AppCompatActivity implements NewsFragment.OnListFragmentInteractionListener {
     public static final int RESULT_NEW_NEWS_REQUEST = 0;
@@ -72,7 +80,7 @@ public class NewsActivity extends AppCompatActivity implements NewsFragment.OnLi
 
         Long timestamp = null;
         try {
-            timestamp = (new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).parse(DATE_STRING).getTime();
+            timestamp = (new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z")).parse(DATE_STRING).getTime();
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -86,22 +94,15 @@ public class NewsActivity extends AppCompatActivity implements NewsFragment.OnLi
         intent.putExtra(NewNewsFragment.DATA_LIKES, 2);
         intent.putExtra(NewNewsFragment.DATA_COMMENTS, 3);
 
-        // download
-        Long id = mDownloadService.downloadFile(this, "http://cache.rebuild.fm/podcast-ep168.mp3");
-        mDownloadId = id;
 
         startActivityForResult(intent, RESULT_NEW_NEWS_REQUEST);
     }
 
     public void doLoad(View view) {
-        Intent intent = new Intent(this, PlayerActivity.class);
+        NewsFragment firstFragment = NewsFragment.newInstance(1, "https://tweakpods.appspot.com/rss/f2faf157-595/feed.rss");
 
-        if (mDownloadId != null) {
-            Uri uri = mDownloadService.getDownloadUri(this, mDownloadId);
-            if (uri == null) return;
-            intent.putExtra("url", uri.toString());
-            startActivityForResult(intent, RESULT_START_MUSIC);
-        }
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, firstFragment).commit();
     }
 
     public void doLoad2(View view) {
@@ -112,7 +113,7 @@ public class NewsActivity extends AppCompatActivity implements NewsFragment.OnLi
 
 
     @Override
-    public void onListFragmentInteraction(NewsContent.NewsItem item) {
+    public void onListFragmentInteraction(FeedItem item) {
         onActivityResult(0, 0, null);
     }
 
@@ -137,24 +138,41 @@ public class NewsActivity extends AppCompatActivity implements NewsFragment.OnLi
 
     @Subscribe
     public void callbackAddMessage(Events.NewsFragmentAddMessage message) {
-        newsFragment.addNews(message.getNews());
+//        newsFragment.addNews(message.getNews());
     }
 
     @Subscribe
     public void callbackClickMessage(Events.NewsFragmentClickMessage message) {
-        Intent intent = new Intent(this, NewNewsActivity.class);
+        Intent intent = new Intent(this, PlayerActivity.class);
 
-        intent.putExtra(NewNewsFragment.DATA_USER, message.getNews().id);
-        intent.putExtra(NewNewsFragment.DATA_DATE, message.getNews().date.getTime());
-        intent.putExtra(NewNewsFragment.DATA_BODY, message.getNews().content);
-        intent.putExtra(NewNewsFragment.DATA_ICON_URL, message.getNews().iconUrl);
-        intent.putExtra(NewNewsFragment.DATA_IMAGE_URL1, message.getNews().imageUrl1);
-        intent.putExtra(NewNewsFragment.DATA_IMAGE_URL2, message.getNews().imageUrl2);
-        intent.putExtra(NewNewsFragment.DATA_LIKES, message.getNews().likes);
-        intent.putExtra(NewNewsFragment.DATA_COMMENTS, message.getNews().comments);
-        intent.putExtra(NewNewsFragment.DATA_KIND, "detail");
+        // download
+        if (mDownloadId == null) {
+            Long id = mDownloadService.downloadFile(this, message.getNews().title, message.getNews().enclosure.url);
+            mDownloadId = id;
+        }
 
-        startActivityForResult(intent, RESULT_DETAIL_NEWS_REQUEST);
+        if (mDownloadId != null) {
+            Uri uri = mDownloadService.getDownloadUri(this, mDownloadId);
+            if (uri == null) return;
+            intent.putExtra("url", uri.toString());
+            mDownloadId = null;
+            startActivityForResult(intent, RESULT_START_MUSIC);
+        }
+
+
+//        Intent intent = new Intent(this, NewNewsActivity.class);
+//
+//        intent.putExtra(NewNewsFragment.DATA_USER, message.getNews().id);
+//        intent.putExtra(NewNewsFragment.DATA_DATE, message.getNews().date.getTime());
+//        intent.putExtra(NewNewsFragment.DATA_BODY, message.getNews().content);
+//        intent.putExtra(NewNewsFragment.DATA_ICON_URL, message.getNews().iconUrl);
+//        intent.putExtra(NewNewsFragment.DATA_IMAGE_URL1, message.getNews().imageUrl1);
+//        intent.putExtra(NewNewsFragment.DATA_IMAGE_URL2, message.getNews().imageUrl2);
+//        intent.putExtra(NewNewsFragment.DATA_LIKES, message.getNews().likes);
+//        intent.putExtra(NewNewsFragment.DATA_COMMENTS, message.getNews().comments);
+//        intent.putExtra(NewNewsFragment.DATA_KIND, "detail");
+
+//        startActivityForResult(intent, RESULT_DETAIL_NEWS_REQUEST);
     }
 
 }

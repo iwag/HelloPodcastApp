@@ -55,7 +55,7 @@ public class NewsContent {
 
     private static String makeDetails(int position) {
         StringBuilder builder = new StringBuilder();
-        builder.append("Details about Item: ").append(position);
+        builder.append("Details about FeedItem: ").append(position);
         for (int i = 0; i < position; i++) {
             builder.append("\nMore details information here.");
         }

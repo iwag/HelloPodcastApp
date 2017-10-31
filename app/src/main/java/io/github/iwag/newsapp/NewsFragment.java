@@ -1,11 +1,13 @@
 package io.github.iwag.newsapp;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +18,18 @@ import io.github.iwag.newsapp.dummy.NewsContent;
 import io.github.iwag.newsapp.dummy.NewsContent.NewsItem;
 import io.github.iwag.newsapp.event.Events;
 import io.github.iwag.newsapp.event.GlobalBus;
+import io.github.iwag.newsapp.infra.PodcastFeedAPIClient;
+import io.github.iwag.newsapp.infra.PodcastFeedApiService;
+import io.github.iwag.newsapp.models.FeedItem;
+import io.github.iwag.newsapp.models.Rss;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.http.Url;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.LinkedList;
 
 /**
@@ -29,11 +42,13 @@ public class NewsFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
+    private static final String ARG_URL = "arg-url";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private NewsRecyclerViewAdapter mAdapter;
     private final int LOAD_COUNT = 10;
+    private String mUrl = "";
 
     public interface NewsFragmentClickListener {
         void onClick(View view, int position);
@@ -46,10 +61,11 @@ public class NewsFragment extends Fragment {
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static NewsFragment newInstance(int columnCount) {
+    public static NewsFragment newInstance(int columnCount, String s) {
         NewsFragment fragment = new NewsFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putString(ARG_URL, s);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,6 +76,7 @@ public class NewsFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            mUrl = getArguments().getString(ARG_URL);
         }
     }
 
@@ -81,14 +98,14 @@ public class NewsFragment extends Fragment {
 //            mAdapter.shouldShowFooters(true);
 //            recyclerView.setAdapter(mAdapter);
 
-            mAdapter = new NewsRecyclerViewAdapter(getContext(), new LinkedList<NewsItem>(), mListener);
+            mAdapter = new NewsRecyclerViewAdapter(getContext(), new LinkedList<FeedItem>(), mListener);
 
             recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
             recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new NewsFragmentClickListener() {
                 @Override
                 public void onClick(View view, int position) {
-                    NewsItem news = mAdapter.getNews(position);
+                    FeedItem news = mAdapter.getNews(position);
 
                     Events.NewsFragmentClickMessage newsFragmentClickMessageEvent =
                             new Events.NewsFragmentClickMessage(news);
@@ -104,6 +121,9 @@ public class NewsFragment extends Fragment {
             }));
 
             recyclerView.setAdapter(mAdapter);
+
+            loadNews();
+
         }
         return view;
     }
@@ -138,18 +158,36 @@ public class NewsFragment extends Fragment {
         mListener = null;
     }
 
-    public void addNews(NewsItem item) {
+    public void addNews(FeedItem item) {
         mAdapter.addItem(item);
         mAdapter.notifyDataSetChanged();
     }
 
     public void loadNews() {
-        if (mAdapter != null) {
-            for (int i = 0; i < LOAD_COUNT; i++) {
-                NewsItem news = NewsContent.createNewsItem(i);
-                mAdapter.addItem(news);
-            }
-            mAdapter.notifyDataSetChanged();
+        if (mAdapter != null && !mUrl.isEmpty()) {
+            PodcastFeedAPIClient client = PodcastFeedApiService.create("http://example.com");
+            client.getRss(mUrl).enqueue(new Callback<Rss>() {
+                @Override
+                public void onResponse(Call<Rss> call, Response<Rss> response) {
+                    if (response.isSuccessful()) {
+                        response.body().channel.items.forEach(item -> mAdapter.addItem(item));
+                        mAdapter.notifyDataSetChanged();
+                        Log.d("rssCliend", "load " + response.body().channel.items.size() );
+                    } else {
+                        try {
+                            Log.d("rssCliend", "error +"+ response.errorBody().string().toString());
+                        } catch (IOException e) {
+
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Rss> call, Throwable t) {
+                    Log.d("client", t.toString());
+                }
+            });
+
         }
     }
 
@@ -183,6 +221,6 @@ public class NewsFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(NewsItem item);
+        void onListFragmentInteraction(FeedItem item);
     }
 }

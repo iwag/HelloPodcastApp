@@ -27,14 +27,12 @@ public class DownloadService {
         return file;
     }
 
-    public Long downloadFile(Context context,  String url) {
+    public Long downloadFile(Context context, String title, String url) {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-        request.setDescription("Some descrition");
-        request.setTitle("Some title");
 
         File file = getTempFile(context, url);
-        request.setTitle(file.getName());
-        request.setDescription(file.getAbsolutePath());
+        request.setTitle(title);
+        request.setDescription(url);
 //        request.setDestinationInExternalPublicDir(Environment.getExternalStoragePublicDirectory(
 //                Environment.DIRECTORY_PODCASTS).getAbsolutePath(), "podcast");
 

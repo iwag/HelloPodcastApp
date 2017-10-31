@@ -16,6 +16,7 @@ import io.github.iwag.newsapp.NewsFragment.OnListFragmentInteractionListener;
 import io.github.iwag.newsapp.dummy.NewsContent.NewsItem;
 import io.github.iwag.newsapp.event.Events;
 import io.github.iwag.newsapp.event.GlobalBus;
+import io.github.iwag.newsapp.models.FeedItem;
 
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
@@ -29,10 +30,10 @@ import java.util.List;
 public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerViewAdapter.ViewHolder> {
 
     private final Context mContext;
-    private final List<NewsItem> mValues;
+    private final List<FeedItem> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public NewsRecyclerViewAdapter(Context context, List<NewsItem> items, OnListFragmentInteractionListener listener) {
+    public NewsRecyclerViewAdapter(Context context, List<FeedItem> items, OnListFragmentInteractionListener listener) {
         mContext = context;
         mValues = items;
         mListener = listener;
@@ -45,31 +46,6 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
 //        return new ViewHolder(view);
 //    }
 
-    private List<NewsItem> getNewsList(int section) {
-        LinkedList<NewsItem> list = new LinkedList<>();
-//        for (NewsItem i:mValues) {
-//            Log.d("News", i + " " + i.date.getYear());
-//        }
-        if (section==0) {
-            int n=0;
-            for (int i=0; i<mValues.size(); i++) {
-                NewsItem ni = mValues.get(i);
-                if (ni.date.getYear() > 2012-1900) {
-                    list.add(ni);
-                }
-            }
-        } else {
-            int n=0;
-            for (int i=0; i<mValues.size(); i++) {
-                NewsItem ni = mValues.get(i);
-                if (ni.date.getYear() <= 2012-1900) {
-                    list.add(ni);
-                }
-            }
-        }
-
-        return list;
-    }
 
 //    @Override
 //    public int getSectionCount() {
@@ -130,17 +106,17 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
     public void onBindViewHolder(ViewHolder holder, int position) {
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy");
 
-        List<NewsItem> list = mValues;
+        List<FeedItem> list = mValues;
         holder.mItem = list.get(position);
 
-        holder.mUserNameView.setText("by " + holder.mItem.id);
-        holder.mContentView.setText(holder.mItem.content);
-        holder.mDateView.setText(sdf.format(holder.mItem.date));
-        Picasso.with(mContext).load(holder.mItem.iconUrl).placeholder(R.mipmap.ic_launcher).into(holder.mIconView);
-        Picasso.with(mContext).load(holder.mItem.imageUrl1).placeholder(R.mipmap.ic_launcher).into(holder.mImageView1);
-        Picasso.with(mContext).load(holder.mItem.imageUrl2).placeholder(R.mipmap.ic_launcher).into(holder.mImageView2);
-        holder.mLikesView.setText("Likes:"+holder.mItem.likes);
-        holder.mCommentsView.setText("Comments:"+holder.mItem.comments);
+        holder.mUserNameView.setText(holder.mItem.title);
+        holder.mContentView.setText(holder.mItem.subTitle);
+        holder.mDateView.setText(holder.mItem.pubDate);
+//        Picasso.with(mContext).load(holder.mItem.iconUrl).placeholder(R.mipmap.ic_launcher).into(holder.mIconView);
+//        Picasso.with(mContext).load(holder.mItem.imageUrl1).placeholder(R.mipmap.ic_launcher).into(holder.mImageView1);
+//        Picasso.with(mContext).load(holder.mItem.imageUrl2).placeholder(R.mipmap.ic_launcher).into(holder.mImageView2);
+        holder.mLikesView.setText(holder.mItem.duration);
+//        holder.mCommentsView.setText("Comments:"+holder.mItem.comments);
 
         holder.mView.setOnClickListener(v -> {
             if (null != mListener) {
@@ -157,7 +133,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         return mValues.size();
     }
 
-    public void addItem(NewsItem item) {
+    public void addItem(FeedItem item) {
         mValues.add(item);
     }
 
@@ -167,7 +143,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         notifyItemRangeChanged(pos, mValues.size());
     }
 
-    public NewsItem getNews(int pos) {
+    public FeedItem getNews(int pos) {
         return mValues.get(pos);
     }
 
@@ -177,13 +153,11 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         public final TextView mContentView;
         public final TextView mDateView;
         public final ImageView mIconView;
-        public final ImageView mImageView1;
-        public final ImageView mImageView2;
         public final TextView mLikesView;
         public final TextView mCommentsView;
         public final Button mButton;
 
-        public NewsItem mItem;
+        public FeedItem mItem;
 
         public ViewHolder(View view) {
             super(view);
@@ -192,8 +166,6 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
             mContentView = (TextView) view.findViewById(R.id.content);
             mDateView = view.findViewById(R.id.dateTextView);
             mIconView = view.findViewById(R.id.iconView);
-            mImageView1 = view.findViewById(R.id.imageView1);
-            mImageView2 = view.findViewById(R.id.imageView2);
             mLikesView = view.findViewById(R.id.likeTextView);
             mCommentsView = view.findViewById(R.id.commentTextView);
             mButton = view.findViewById(R.id.removeButton);
