@@ -93,7 +93,7 @@ public class NewsActivity extends AppCompatActivity implements NewsFragment.OnLi
     }
 
     public void doLoad(View view) {
-        NewsFragment firstFragment = NewsFragment.newInstance(1, "https://tweakpods.appspot.com/rss/f2faf157-595/feed.rss");
+        NewsFragment firstFragment = NewsFragment.newInstance(1, "http://rebuild.fm/feed.xml");
 
         getFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, firstFragment).commit();

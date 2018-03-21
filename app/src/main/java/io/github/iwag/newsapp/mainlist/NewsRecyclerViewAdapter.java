@@ -10,11 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
+import com.squareup.picasso.Picasso;
 
 import io.github.iwag.newsapp.R;
 import io.github.iwag.newsapp.dummy.NewsContent.NewsItem;
 import io.github.iwag.newsapp.event.Events;
 import io.github.iwag.newsapp.event.GlobalBus;
+import io.github.iwag.newsapp.models.Channel;
 import io.github.iwag.newsapp.models.FeedItem;
 
 import java.text.ParseException;
@@ -31,11 +33,13 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
 
     private final Context mContext;
     private final List<FeedItem> mValues;
+    private Channel mChannel;
     private final NewsFragment.OnListFragmentInteractionListener mListener;
 
     public NewsRecyclerViewAdapter(Context context, List<FeedItem> items, NewsFragment.OnListFragmentInteractionListener listener) {
         mContext = context;
         mValues = items;
+        mChannel = null;
         mListener = listener;
     }
 
@@ -119,9 +123,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         }
         holder.mDateView.setText(readableFmt.format(pubDate));
         
-//        Picasso.with(mContext).load(holder.mItem.iconUrl).placeholder(R.mipmap.ic_launcher).into(holder.mIconView);
-//        Picasso.with(mContext).load(holder.mItem.imageUrl1).placeholder(R.mipmap.ic_launcher).into(holder.mImageView1);
-//        Picasso.with(mContext).load(holder.mItem.imageUrl2).placeholder(R.mipmap.ic_launcher).into(holder.mImageView2);
+        Picasso.with(mContext).load(mChannel.itunesImage.getHref()).placeholder(R.mipmap.ic_launcher).into(holder.mIconView);
         holder.mLikesView.setText(holder.mItem.duration);
 //        holder.mCommentsView.setText("Comments:"+holder.mItem.comments);
 
@@ -152,6 +154,10 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
 
     public FeedItem getNews(int pos) {
         return mValues.get(pos);
+    }
+
+    public void setChannel(Channel channel) {
+        this.mChannel = channel;
     }
 
     public class ViewHolder extends SectionedViewHolder implements View.OnClickListener {

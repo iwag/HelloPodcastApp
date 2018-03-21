@@ -17,7 +17,7 @@ public final class Channel {
 //    @ElementList(name = "description", inline = true, required = false)
 //    public List<Description> descriptions;
 
-    @Namespace(reference = "http://www.itunes.com/dtds/podcast-1.0.dtd")
+    @Namespace(reference = "http://www.itunes.com/dtds/podcast-1.0.dtd", prefix = "itunes")
     @Element(name = "summary", required = false)
     public String summary;
 
@@ -27,4 +27,8 @@ public final class Channel {
 
     @ElementList(name = "item", inline = true)
     public List<FeedItem> items;
+
+    @Namespace(reference = "http://www.itunes.com/dtds/podcast-1.0.dtd", prefix = "itunes")
+    @Element(name = "image", required = false)
+    public ItunesImage itunesImage;
 }

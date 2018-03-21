@@ -54,13 +54,12 @@ public class NewsFragment extends Fragment {
     public NewsFragment() {
     }
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static NewsFragment newInstance(int columnCount, String s) {
+    public static NewsFragment newInstance(int columnCount, String url) {
         NewsFragment fragment = new NewsFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
-        args.putString(ARG_URL, s);
+        args.putString(ARG_URL, url);
         fragment.setArguments(args);
         return fragment;
     }
@@ -166,6 +165,7 @@ public class NewsFragment extends Fragment {
                 public void onResponse(Call<Rss> call, Response<Rss> response) {
                     if (response.isSuccessful()) {
                         response.body().channel.items.forEach(item -> mAdapter.addItem(item));
+                        mAdapter.setChannel(response.body().channel);
                         mAdapter.notifyDataSetChanged();
                         Log.d("rssCliend", "load " + response.body().channel.items.size() );
                     } else {
