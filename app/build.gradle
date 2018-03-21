@@ -55,6 +55,8 @@ dependencies {
         exclude module: 'stax'
         exclude module: 'xpp3'
     }
+    compile 'org.greenrobot:eventbus:3.1.1'
+
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:design:26.+'
 }
