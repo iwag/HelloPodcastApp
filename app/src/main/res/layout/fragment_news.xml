@@ -11,27 +11,24 @@
             android:layout_height="130dp">
 
             <TextView
-                android:id="@+id/userNameTextView"
+                android:id="@+id/titleEpisodeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/text_margin"
-                android:layout_marginRight="@dimen/text_margin"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="5dp"
+                android:layout_toEndOf="@+id/iconView"
                 android:text="username~~~~"
-                android:textAppearance="?attr/textAppearanceListItem"
-                android:layout_above="@+id/content"
-                android:layout_toEndOf="@+id/iconView" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <TextView
                 android:id="@+id/dateTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/text_margin"
-                android:layout_marginRight="@dimen/text_margin"
-                android:text="date~~~~"
 
-                android:textAppearance="?attr/textAppearanceListItem"
-                android:layout_alignParentTop="true"
-                android:layout_alignEnd="@+id/content" />
+                android:layout_alignBottom="@+id/content"
+                android:layout_alignEnd="@+id/content"
+                android:text="date~~~~"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
 
             <TextView
@@ -74,23 +71,19 @@
                     android:id="@+id/commentTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
                     android:layout_marginLeft="5dp"
-                    android:text="Comments:"
-                    android:layout_weight="1"
-                    />
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1" />
 
 
                 <Button
-                    android:visibility="invisible"
-                    android:layout_marginLeft="40dp"
-                    android:layout_weight="1"
                     android:id="@+id/removeButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
                     android:text="REMOVE"
-                    android:textAppearance="@android:style/TextAppearance.Material.Small" />
+                    android:textAppearance="@android:style/TextAppearance.Material.Small"
+                    android:visibility="invisible" />
 
             </LinearLayout>
 

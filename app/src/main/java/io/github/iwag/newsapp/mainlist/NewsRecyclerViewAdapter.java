@@ -17,7 +17,9 @@ import io.github.iwag.newsapp.event.Events;
 import io.github.iwag.newsapp.event.GlobalBus;
 import io.github.iwag.newsapp.models.FeedItem;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -102,14 +104,21 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy");
-
+        SimpleDateFormat oldFmt = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z");
+        SimpleDateFormat readableFmt = new SimpleDateFormat("dd MMM yyyy HH:mm");
         List<FeedItem> list = mValues;
         holder.mItem = list.get(position);
 
-        holder.mUserNameView.setText(holder.mItem.title);
+        holder.mEpisodeTitleView.setText(holder.mItem.title);
         holder.mContentView.setText(holder.mItem.subTitle);
-        holder.mDateView.setText(holder.mItem.pubDate);
+        Date pubDate = null;
+        try {
+            pubDate = oldFmt.parse(holder.mItem.pubDate);
+        } catch (ParseException e) {
+            pubDate = new Date();
+        }
+        holder.mDateView.setText(readableFmt.format(pubDate));
+        
 //        Picasso.with(mContext).load(holder.mItem.iconUrl).placeholder(R.mipmap.ic_launcher).into(holder.mIconView);
 //        Picasso.with(mContext).load(holder.mItem.imageUrl1).placeholder(R.mipmap.ic_launcher).into(holder.mImageView1);
 //        Picasso.with(mContext).load(holder.mItem.imageUrl2).placeholder(R.mipmap.ic_launcher).into(holder.mImageView2);
@@ -147,7 +156,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
 
     public class ViewHolder extends SectionedViewHolder implements View.OnClickListener {
         public final View mView;
-        public final TextView mUserNameView;
+        public final TextView mEpisodeTitleView;
         public final TextView mContentView;
         public final TextView mDateView;
         public final ImageView mIconView;
@@ -160,7 +169,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mUserNameView = (TextView) view.findViewById(R.id.userNameTextView);
+            mEpisodeTitleView = (TextView) view.findViewById(R.id.titleEpisodeTextView);
             mContentView = (TextView) view.findViewById(R.id.content);
             mDateView = view.findViewById(R.id.dateTextView);
             mIconView = view.findViewById(R.id.iconView);
