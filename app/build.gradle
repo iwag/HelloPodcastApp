@@ -48,13 +48,15 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.4.4@jar'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.4.4@jar'
 
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:converter-jackson:2.3.0'
-    compile ('com.squareup.retrofit2:converter-simplexml:2.3.0') {
-        exclude module: 'stax-api'
+    compile 'com.squareup.retrofit2:retrofit:2.4.0'
+    compile 'com.squareup.retrofit2:converter-jackson:2.4.0'
+    compile('com.squareup.retrofit2:converter-simplexml:2.4.0')
+    compile('org.simpleframework:simple-xml:2.7.+'){
         exclude module: 'stax'
+        exclude module: 'stax-api'
         exclude module: 'xpp3'
     }
+
     compile 'org.greenrobot:eventbus:3.1.1'
 
     testCompile 'junit:junit:4.12'
