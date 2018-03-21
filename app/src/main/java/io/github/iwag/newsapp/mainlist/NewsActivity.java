@@ -1,10 +1,9 @@
-package io.github.iwag.newsapp;
+package io.github.iwag.newsapp.mainlist;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -12,17 +11,12 @@ import org.greenrobot.eventbus.Subscribe;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import io.github.iwag.newsapp.dummy.NewsContent;
+import io.github.iwag.newsapp.R;
 import io.github.iwag.newsapp.event.Events;
 import io.github.iwag.newsapp.event.GlobalBus;
-import io.github.iwag.newsapp.infra.PodcastFeedAPIClient;
-import io.github.iwag.newsapp.infra.PodcastFeedApiService;
 import io.github.iwag.newsapp.models.FeedItem;
-import io.github.iwag.newsapp.models.Rss;
+import io.github.iwag.newsapp.player.PlayerActivity;
 import io.github.iwag.newsapp.service.DownloadService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class NewsActivity extends AppCompatActivity implements NewsFragment.OnListFragmentInteractionListener {
     public static final int RESULT_NEW_NEWS_REQUEST = 0;

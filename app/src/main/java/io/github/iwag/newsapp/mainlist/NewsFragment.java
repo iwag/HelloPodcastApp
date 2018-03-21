@@ -1,7 +1,6 @@
-package io.github.iwag.newsapp;
+package io.github.iwag.newsapp.mainlist;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,8 +13,7 @@ import android.view.ViewGroup;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import io.github.iwag.newsapp.dummy.NewsContent;
-import io.github.iwag.newsapp.dummy.NewsContent.NewsItem;
+import io.github.iwag.newsapp.R;
 import io.github.iwag.newsapp.event.Events;
 import io.github.iwag.newsapp.event.GlobalBus;
 import io.github.iwag.newsapp.infra.PodcastFeedAPIClient;
@@ -25,11 +23,8 @@ import io.github.iwag.newsapp.models.Rss;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Url;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.LinkedList;
 
 /**

@@ -1,4 +1,4 @@
-package io.github.iwag.newsapp;
+package io.github.iwag.newsapp.mainlist;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import java.util.Objects;
 
+import io.github.iwag.newsapp.R;
 import io.github.iwag.newsapp.dummy.NewsContent;
 import io.github.iwag.newsapp.event.Events;
 import io.github.iwag.newsapp.event.GlobalBus;

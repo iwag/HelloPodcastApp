@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.iwag.newsapp;
+package io.github.iwag.newsapp.player;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,6 +24,8 @@ import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import io.github.iwag.newsapp.R;
 
 /**
  * Allows playback of a single MP3 file via the UI. It contains a {@link MediaPlayerHolder}

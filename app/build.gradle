@@ -50,7 +50,11 @@ dependencies {
 
     compile 'com.squareup.retrofit2:retrofit:2.4.0'
     compile 'com.squareup.retrofit2:converter-jackson:2.4.0'
-    compile('com.squareup.retrofit2:converter-simplexml:2.4.0')
+    compile('com.squareup.retrofit2:converter-simplexml:2.4.0'){
+        exclude module: 'stax'
+        exclude module: 'stax-api'
+        exclude module: 'xpp3'
+    }
     compile('org.simpleframework:simple-xml:2.7.+'){
         exclude module: 'stax'
         exclude module: 'stax-api'

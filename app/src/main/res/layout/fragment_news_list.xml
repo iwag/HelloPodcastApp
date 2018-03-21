@@ -11,7 +11,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
-        tools:context="io.github.iwag.newsapp.NewsFragment"
+        tools:context="io.github.iwag.newsapp.mainlist.NewsFragment"
         tools:listitem="@layout/fragment_news" />
 
 

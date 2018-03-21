@@ -1,4 +1,4 @@
-package io.github.iwag.newsapp;
+package io.github.iwag.newsapp.mainlist;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,30 +10,28 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
-import com.squareup.picasso.Picasso;
 
-import io.github.iwag.newsapp.NewsFragment.OnListFragmentInteractionListener;
+import io.github.iwag.newsapp.R;
 import io.github.iwag.newsapp.dummy.NewsContent.NewsItem;
 import io.github.iwag.newsapp.event.Events;
 import io.github.iwag.newsapp.event.GlobalBus;
 import io.github.iwag.newsapp.models.FeedItem;
 
 import java.text.SimpleDateFormat;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link NewsItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
+ * specified {@link NewsFragment.OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerViewAdapter.ViewHolder> {
 
     private final Context mContext;
     private final List<FeedItem> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private final NewsFragment.OnListFragmentInteractionListener mListener;
 
-    public NewsRecyclerViewAdapter(Context context, List<FeedItem> items, OnListFragmentInteractionListener listener) {
+    public NewsRecyclerViewAdapter(Context context, List<FeedItem> items, NewsFragment.OnListFragmentInteractionListener listener) {
         mContext = context;
         mValues = items;
         mListener = listener;

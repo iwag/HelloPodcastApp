@@ -3,8 +3,9 @@ package io.github.iwag.newsapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.GestureDetector;
 import android.view.View;
+
+import io.github.iwag.newsapp.mainlist.NewsActivity;
 
 public class MainActivity extends Activity {
 

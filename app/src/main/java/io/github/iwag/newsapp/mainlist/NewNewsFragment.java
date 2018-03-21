@@ -1,4 +1,4 @@
-package io.github.iwag.newsapp;
+package io.github.iwag.newsapp.mainlist;
 
 
 import android.os.Bundle;
@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 
+import io.github.iwag.newsapp.R;
 import io.github.iwag.newsapp.dummy.NewsContent;
 
 

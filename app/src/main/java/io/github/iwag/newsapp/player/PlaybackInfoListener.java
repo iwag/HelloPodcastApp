@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.iwag.newsapp;
+package io.github.iwag.newsapp.player;
 
 import android.support.annotation.IntDef;
 
