@@ -11,8 +11,6 @@ import java.util.Objects;
 
 import io.github.iwag.newsapp.R;
 import io.github.iwag.newsapp.dummy.NewsContent;
-import io.github.iwag.newsapp.event.Events;
-import io.github.iwag.newsapp.event.GlobalBus;
 
 public class NewNewsActivity extends AppCompatActivity {
 
@@ -84,11 +82,6 @@ public class NewNewsActivity extends AppCompatActivity {
                     mBundle.getString(NewNewsFragment.DATA_ICON_URL), mBundle.getString(NewNewsFragment.DATA_IMAGE_URL1), mBundle.getString(NewNewsFragment.DATA_IMAGE_URL2),
                     mBundle.getInt(NewNewsFragment.DATA_LIKES), mBundle.getInt(NewNewsFragment.DATA_COMMENTS));
 
-
-            Events.NewsFragmentAddMessage message =
-                    new Events.NewsFragmentAddMessage(news);
-
-            GlobalBus.getBus().post(message);
 
             Intent intent = new Intent(RESULT_NEW_NEWS);
             setResult(Activity.RESULT_OK, intent);

@@ -14,8 +14,6 @@ import android.view.ViewGroup;
 import org.greenrobot.eventbus.Subscribe;
 
 import io.github.iwag.newsapp.R;
-import io.github.iwag.newsapp.event.Events;
-import io.github.iwag.newsapp.event.GlobalBus;
 import io.github.iwag.newsapp.infra.PodcastFeedAPIClient;
 import io.github.iwag.newsapp.infra.PodcastFeedApiService;
 import io.github.iwag.newsapp.models.FeedItem;
@@ -101,11 +99,6 @@ public class NewsFragment extends Fragment {
                 public void onClick(View view, int position) {
                     FeedItem news = mAdapter.getNews(position);
 
-                    Events.NewsFragmentClickMessage newsFragmentClickMessageEvent =
-                            new Events.NewsFragmentClickMessage(news);
-
-                    GlobalBus.getBus().post(newsFragmentClickMessageEvent);
-
                 }
 
                 @Override
@@ -184,23 +177,6 @@ public class NewsFragment extends Fragment {
             });
 
         }
-    }
-
-    @Subscribe
-    public void callbackRemoveMessage(Events.NewsFragmentRemoveMessage message) {
-        mAdapter.removeAt(message.getIndex());
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        GlobalBus.getBus().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        GlobalBus.getBus().unregister(this);
     }
 
 

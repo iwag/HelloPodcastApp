@@ -2,6 +2,7 @@ package io.github.iwag.newsapp.mainlist;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,6 @@ import com.squareup.picasso.Picasso;
 
 import io.github.iwag.newsapp.R;
 import io.github.iwag.newsapp.dummy.NewsContent.NewsItem;
-import io.github.iwag.newsapp.event.Events;
-import io.github.iwag.newsapp.event.GlobalBus;
 import io.github.iwag.newsapp.models.Channel;
 import io.github.iwag.newsapp.models.FeedItem;
 
@@ -183,8 +182,8 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
             mCommentsView = view.findViewById(R.id.commentTextView);
             mButton = view.findViewById(R.id.removeButton);
             mButton.setOnClickListener(view1 -> {
-                Events.NewsFragmentRemoveMessage message = new Events.NewsFragmentRemoveMessage(getAdapterPosition());
-                GlobalBus.getBus().post(message);
+
+                Log.d("RecyclerView", "Click");
             });
         }
 

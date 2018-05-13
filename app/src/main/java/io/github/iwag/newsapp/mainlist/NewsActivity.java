@@ -12,8 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import io.github.iwag.newsapp.R;
-import io.github.iwag.newsapp.event.Events;
-import io.github.iwag.newsapp.event.GlobalBus;
+import io.github.iwag.newsapp.dummy.NewsContent;
 import io.github.iwag.newsapp.models.FeedItem;
 import io.github.iwag.newsapp.player.PlayerActivity;
 import io.github.iwag.newsapp.service.DownloadService;
@@ -118,32 +117,14 @@ public class NewsActivity extends AppCompatActivity implements NewsFragment.OnLi
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        GlobalBus.getBus().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        GlobalBus.getBus().unregister(this);
-    }
-
-    @Subscribe
-    public void callbackAddMessage(Events.NewsFragmentAddMessage message) {
-//        newsFragment.addNews(message.getNews());
-    }
-
-    @Subscribe
-    public void callbackClickMessage(Events.NewsFragmentClickMessage message) {
+    public void callbackClickMessage(NewsContent news) {
         Intent intent = new Intent(this, PlayerActivity.class);
 
         // download
-        if (mDownloadId == null) {
-            Long id = mDownloadService.downloadFile(this, message.getNews().title, message.getNews().enclosure.url);
-            mDownloadId = id;
-        }
+//        if (mDownloadId == null) {
+//            Long id = mDownloadService.downloadFile(this, news.title, news.getNews().enclosure.url);
+//            mDownloadId = id;
+//        }
 
         if (mDownloadId != null) {
             Uri uri = mDownloadService.getDownloadUri(this, mDownloadId);
