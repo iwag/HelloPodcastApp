@@ -6,13 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import org.greenrobot.eventbus.Subscribe;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import io.github.iwag.newsapp.R;
-import io.github.iwag.newsapp.dummy.NewsContent;
 import io.github.iwag.newsapp.models.FeedItem;
 import io.github.iwag.newsapp.player.PlayerActivity;
 import io.github.iwag.newsapp.service.DownloadService;
@@ -133,24 +130,6 @@ public class NewsActivity extends AppCompatActivity implements NewsFragment.OnLi
         // Make sure the request was successful
         if (requestCode == RESULT_NEW_NEWS_REQUEST && resultCode == RESULT_OK) {
         }
-    }
-
-    public void callbackClickMessage(NewsContent news) {
-
-
-//        Intent intent = new Intent(this, NewNewsActivity.class);
-//
-//        intent.putExtra(NewNewsFragment.DATA_USER, message.getNews().id);
-//        intent.putExtra(NewNewsFragment.DATA_DATE, message.getNews().date.getTime());
-//        intent.putExtra(NewNewsFragment.DATA_BODY, message.getNews().content);
-//        intent.putExtra(NewNewsFragment.DATA_ICON_URL, message.getNews().iconUrl);
-//        intent.putExtra(NewNewsFragment.DATA_IMAGE_URL1, message.getNews().imageUrl1);
-//        intent.putExtra(NewNewsFragment.DATA_IMAGE_URL2, message.getNews().imageUrl2);
-//        intent.putExtra(NewNewsFragment.DATA_LIKES, message.getNews().likes);
-//        intent.putExtra(NewNewsFragment.DATA_COMMENTS, message.getNews().comments);
-//        intent.putExtra(NewNewsFragment.DATA_KIND, "detail");
-
-//        startActivityForResult(intent, RESULT_DETAIL_NEWS_REQUEST);
     }
 
 }

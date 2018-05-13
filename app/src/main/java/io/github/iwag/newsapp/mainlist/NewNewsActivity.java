@@ -10,7 +10,6 @@ import android.widget.Button;
 import java.util.Objects;
 
 import io.github.iwag.newsapp.R;
-import io.github.iwag.newsapp.dummy.NewsContent;
 
 public class NewNewsActivity extends AppCompatActivity {
 
@@ -77,12 +76,6 @@ public class NewNewsActivity extends AppCompatActivity {
 
 
         public void doSave(View view) {
-            NewsContent.NewsItem news = new NewsContent.NewsItem(mBundle.getString(NewNewsFragment.DATA_USER),
-                    mBundle.getString(NewNewsFragment.DATA_BODY), "", mBundle.getLong(NewNewsFragment.DATA_DATE),
-                    mBundle.getString(NewNewsFragment.DATA_ICON_URL), mBundle.getString(NewNewsFragment.DATA_IMAGE_URL1), mBundle.getString(NewNewsFragment.DATA_IMAGE_URL2),
-                    mBundle.getInt(NewNewsFragment.DATA_LIKES), mBundle.getInt(NewNewsFragment.DATA_COMMENTS));
-
-
             Intent intent = new Intent(RESULT_NEW_NEWS);
             setResult(Activity.RESULT_OK, intent);
             finish();

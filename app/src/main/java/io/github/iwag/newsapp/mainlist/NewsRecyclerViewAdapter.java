@@ -14,7 +14,6 @@ import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.squareup.picasso.Picasso;
 
 import io.github.iwag.newsapp.R;
-import io.github.iwag.newsapp.dummy.NewsContent.NewsItem;
 import io.github.iwag.newsapp.models.Channel;
 import io.github.iwag.newsapp.models.FeedItem;
 
@@ -24,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link NewsItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link FeedItem} and makes a call to the
  * specified {@link NewsFragment.OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
