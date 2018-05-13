@@ -110,6 +110,24 @@ public class NewsActivity extends AppCompatActivity implements NewsFragment.OnLi
         onActivityResult(0, 0, null);
     }
 
+    public void play(FeedItem item) {
+
+        // try download
+        if (mDownloadId == null) {
+            Long id = mDownloadService.downloadFile(this, item.title, item.link);
+            mDownloadId = id;
+        }
+        Intent intent = new Intent(this, PlayerActivity.class);
+        if (mDownloadId != null) {
+            Uri uri = mDownloadService.getDownloadUri(this, mDownloadId);
+            if (uri == null) return;
+            intent.putExtra("url", uri.toString());
+            mDownloadId = null;
+            startActivityForResult(intent, RESULT_START_MUSIC);
+        }
+
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Make sure the request was successful
@@ -118,21 +136,6 @@ public class NewsActivity extends AppCompatActivity implements NewsFragment.OnLi
     }
 
     public void callbackClickMessage(NewsContent news) {
-        Intent intent = new Intent(this, PlayerActivity.class);
-
-        // download
-//        if (mDownloadId == null) {
-//            Long id = mDownloadService.downloadFile(this, news.title, news.getNews().enclosure.url);
-//            mDownloadId = id;
-//        }
-
-        if (mDownloadId != null) {
-            Uri uri = mDownloadService.getDownloadUri(this, mDownloadId);
-            if (uri == null) return;
-            intent.putExtra("url", uri.toString());
-            mDownloadId = null;
-            startActivityForResult(intent, RESULT_START_MUSIC);
-        }
 
 
 //        Intent intent = new Intent(this, NewNewsActivity.class);

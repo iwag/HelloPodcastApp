@@ -97,8 +97,9 @@ public class NewsFragment extends Fragment {
             recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new NewsFragmentClickListener() {
                 @Override
                 public void onClick(View view, int position) {
-                    FeedItem news = mAdapter.getNews(position);
-
+                    FeedItem item = mAdapter.getNews(position);
+                    NewsActivity parent = (NewsActivity)getActivity();
+                    parent.play(item);
                 }
 
                 @Override
@@ -191,7 +192,6 @@ public class NewsFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentInteraction(FeedItem item);
     }
 }
