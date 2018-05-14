@@ -17,13 +17,16 @@ package io.github.iwag.newsapp.player;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import io.github.iwag.newsapp.R;
 
@@ -32,23 +35,26 @@ import io.github.iwag.newsapp.R;
  * which implements the {@link PlayerAdapter} interface that the activity uses to control
  * audio playback.
  */
-public final class PlayerActivity extends AppCompatActivity {
+public final class PlayerActivity extends Activity {
 
     public static final String TAG = "PlayerActivity";
     public static final int MEDIA_RES_ID = 0; // R.raw.jazz_in_paris;
 
-    private TextView mTextDebug;
+    private ImageView mImageView;
     private SeekBar mSeekbarAudio;
     private ScrollView mScrollContainer;
     private PlayerAdapter mPlayerAdapter;
     private boolean mUserIsSeeking = false;
     private Uri mMusicUrl;
+    private Uri mImageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_activity_main);
         mMusicUrl = Uri.parse(getIntent().getStringExtra("url"));
+        mImageUrl = Uri.parse(getIntent().getStringExtra("image_url"));
+
         initializeUI();
         initializeSeekbar();
         initializePlaybackController();
@@ -74,34 +80,18 @@ public final class PlayerActivity extends AppCompatActivity {
     }
 
     private void initializeUI() {
-        mTextDebug = (TextView) findViewById(R.id.text_debug);
+        mImageView = (ImageView) findViewById(R.id.player_image);
+        Picasso.with(getBaseContext()).load(mImageUrl).placeholder(R.mipmap.ic_launcher).into(mImageView);
+
         Button mPlayButton = (Button) findViewById(R.id.button_play);
         Button mPauseButton = (Button) findViewById(R.id.button_pause);
         Button mResetButton = (Button) findViewById(R.id.button_reset);
         mSeekbarAudio = (SeekBar) findViewById(R.id.seekbar_audio);
         mScrollContainer = (ScrollView) findViewById(R.id.scroll_container);
 
-        mPauseButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mPlayerAdapter.pause();
-                    }
-                });
-        mPlayButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mPlayerAdapter.play();
-                    }
-                });
-        mResetButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mPlayerAdapter.reset();
-                    }
-                });
+        mPauseButton.setOnClickListener(view -> mPlayerAdapter.pause());
+        mPlayButton.setOnClickListener(view -> mPlayerAdapter.play());
+        mResetButton.setOnClickListener(view -> mPlayerAdapter.reset());
     }
 
     private void initializePlaybackController() {
@@ -149,7 +139,7 @@ public final class PlayerActivity extends AppCompatActivity {
         public void onPositionChanged(int position) {
             if (!mUserIsSeeking) {
                 mSeekbarAudio.setProgress(position, true);
-                Log.d(TAG, String.format("setPlaybackPosition: setProgress(%d)", position));
+                // Log.d(TAG, String.format("setPlaybackPosition: setProgress(%d)", position));
             }
         }
 

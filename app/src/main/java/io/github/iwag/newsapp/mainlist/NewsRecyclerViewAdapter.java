@@ -33,6 +33,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
     private final List<FeedItem> mValues;
     private Channel mChannel;
     private final NewsFragment.OnListFragmentInteractionListener mListener;
+    private String channel;
 
     public NewsRecyclerViewAdapter(Context context, List<FeedItem> items, NewsFragment.OnListFragmentInteractionListener listener) {
         mContext = context;
@@ -156,6 +157,10 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
 
     public void setChannel(Channel channel) {
         this.mChannel = channel;
+    }
+
+    public Channel getChannel() {
+        return mChannel;
     }
 
     public class ViewHolder extends SectionedViewHolder implements View.OnClickListener {

@@ -97,7 +97,7 @@ public class NewsFragment extends Fragment {
                 public void onClick(View view, int position) {
                     FeedItem item = mAdapter.getNews(position);
                     NewsActivity parent = (NewsActivity)getActivity();
-                    parent.play(item);
+                    parent.play(item, mAdapter.getChannel().itunesImage.getHref());
                 }
 
                 @Override
