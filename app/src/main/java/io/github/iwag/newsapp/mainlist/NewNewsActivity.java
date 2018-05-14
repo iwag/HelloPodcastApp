@@ -2,7 +2,6 @@ package io.github.iwag.newsapp.mainlist;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,7 +10,7 @@ import java.util.Objects;
 
 import io.github.iwag.newsapp.R;
 
-public class NewNewsActivity extends AppCompatActivity {
+public class NewNewsActivity extends Activity {
 
     public static final String RESULT_NEW_NEWS = "aaa";
     public static final String RESULT_EMPTY = "empty";

@@ -11,26 +11,9 @@ import java.io.IOException;
 
 public class DownloadService {
 
-    public File getTempFile(Context context, String url) {
-        File file = null;
-        String fileName = Uri.parse(url).getLastPathSegment();
-
-//        File musicDir = new File(Environment.getExternalStoragePublicDirectory(
-//                Environment.DIRECTORY_PODCASTS), "podcast");
-//        file = new File(musicDir.getPath() + File.separator + fileName);
-
-        try {
-            file = File.createTempFile("mp3", fileName, context.getCacheDir());
-        } catch (IOException e) {
-            file =null;
-        }
-        return file;
-    }
-
     public Long downloadFile(Context context, String title, String url) {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
 
-        File file = getTempFile(context, url);
         request.setTitle(title);
         request.setDescription(url);
 //        request.setDestinationInExternalPublicDir(Environment.getExternalStoragePublicDirectory(

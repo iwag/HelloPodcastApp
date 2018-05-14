@@ -165,18 +165,7 @@ public final class PlayerActivity extends AppCompatActivity {
 
         @Override
         public void onLogUpdated(String message) {
-            if (mTextDebug != null) {
-                mTextDebug.append(message);
-                mTextDebug.append("\n");
-                // Moves the scrollContainer focus to the end.
-                mScrollContainer.post(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                mScrollContainer.fullScroll(ScrollView.FOCUS_DOWN);
-                            }
-                        });
-            }
+            Log.d(TAG, message);
         }
     }
 }

@@ -1,8 +1,8 @@
 package io.github.iwag.newsapp.mainlist;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
@@ -14,7 +14,7 @@ import io.github.iwag.newsapp.models.FeedItem;
 import io.github.iwag.newsapp.player.PlayerActivity;
 import io.github.iwag.newsapp.service.DownloadService;
 
-public class NewsActivity extends AppCompatActivity implements NewsFragment.OnListFragmentInteractionListener {
+public class NewsActivity extends Activity implements NewsFragment.OnListFragmentInteractionListener {
     public static final int RESULT_NEW_NEWS_REQUEST = 0;
     public static final int RESULT_DETAIL_NEWS_REQUEST = 1;
     public static final int RESULT_START_MUSIC = 2;
@@ -107,17 +107,18 @@ public class NewsActivity extends AppCompatActivity implements NewsFragment.OnLi
         onActivityResult(0, 0, null);
     }
 
-    public void play(FeedItem item) {
+    public void play(FeedItem item, String imageUrl) {
 
         // try download
         if (mDownloadId == null) {
-            Long id = mDownloadService.downloadFile(this, item.title, item.link);
+            Long id = mDownloadService.downloadFile(this, item.title, item.enclosure.url);
             mDownloadId = id;
         }
         Intent intent = new Intent(this, PlayerActivity.class);
         if (mDownloadId != null) {
             Uri uri = mDownloadService.getDownloadUri(this, mDownloadId);
             if (uri == null) return;
+            intent.putExtra("image_url", imageUrl);
             intent.putExtra("url", uri.toString());
             mDownloadId = null;
             startActivityForResult(intent, RESULT_START_MUSIC);

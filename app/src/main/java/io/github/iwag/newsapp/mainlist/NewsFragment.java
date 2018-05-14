@@ -11,8 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.greenrobot.eventbus.Subscribe;
-
 import io.github.iwag.newsapp.R;
 import io.github.iwag.newsapp.infra.PodcastFeedAPIClient;
 import io.github.iwag.newsapp.infra.PodcastFeedApiService;
@@ -115,19 +113,6 @@ public class NewsFragment extends Fragment {
         }
         return view;
     }
-
-
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        GlobalBus.getBus().register(this);
-//    }
-//
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//        GlobalBus.getBus().unregister(this);
-//    }
 
     @Override
     public void onAttach(Context context) {
