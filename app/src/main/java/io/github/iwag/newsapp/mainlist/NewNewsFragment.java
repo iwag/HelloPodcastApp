@@ -46,7 +46,6 @@ public class NewNewsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_new_news, container, false);
 
         final Bundle bundle = getArguments();
-        PodcastChannel content = new PodcastChannel();
 
         ImageView iconImageView = view.findViewById(R.id.icon_image_view);
         ImageView photoImageView1 = view.findViewById(R.id.photo_image_view1);

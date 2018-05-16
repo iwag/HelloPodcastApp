@@ -141,6 +141,8 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         return mValues.size();
     }
 
+
+
     public void addItem(FeedItem item) {
         mValues.add(item);
     }

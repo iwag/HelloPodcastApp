@@ -10,11 +10,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import io.github.iwag.newsapp.R;
+import io.github.iwag.newsapp.channellist.ChannelFragment;
+import io.github.iwag.newsapp.models.Channel;
 import io.github.iwag.newsapp.models.FeedItem;
+import io.github.iwag.newsapp.models.PodcastChannel;
 import io.github.iwag.newsapp.player.PlayerActivity;
 import io.github.iwag.newsapp.service.DownloadService;
 
-public class NewsActivity extends Activity implements NewsFragment.OnListFragmentInteractionListener {
+public class NewsActivity extends Activity implements NewsFragment.OnListFragmentInteractionListener, ChannelFragment.OnListFragmentInteractionListener {
     public static final int RESULT_NEW_NEWS_REQUEST = 0;
     public static final int RESULT_DETAIL_NEWS_REQUEST = 1;
     public static final int RESULT_START_MUSIC = 2;
@@ -89,8 +92,7 @@ public class NewsActivity extends Activity implements NewsFragment.OnListFragmen
     }
 
     public void doLoad(View view) {
-        NewsFragment firstFragment = NewsFragment.newInstance(1, "http://rebuild.fm/feed.xml");
-
+        ChannelFragment firstFragment = ChannelFragment.newInstance(1);
         getFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, firstFragment).commit();
     }
@@ -133,4 +135,10 @@ public class NewsActivity extends Activity implements NewsFragment.OnListFragmen
         }
     }
 
+    @Override
+    public void onListFragmentInteraction(PodcastChannel item) {
+        NewsFragment firstFragment = NewsFragment.newInstance(1, item.url);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, firstFragment).commit();
+    }
 }
