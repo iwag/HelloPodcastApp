@@ -11,6 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.convert.AnnotationStrategy;
+import org.simpleframework.xml.core.Persister;
+
 import io.github.iwag.newsapp.R;
 import io.github.iwag.newsapp.infra.PodcastFeedAPIClient;
 import io.github.iwag.newsapp.infra.PodcastFeedApiService;
@@ -40,6 +44,8 @@ public class NewsFragment extends Fragment {
     private NewsRecyclerViewAdapter mAdapter;
     private final int LOAD_COUNT = 10;
     private String mUrl = "";
+
+    private static Serializer ser = new Persister(new AnnotationStrategy());
 
     public interface NewsFragmentClickListener {
         void onClick(View view, int position);
@@ -139,14 +145,23 @@ public class NewsFragment extends Fragment {
     public void loadNews() {
         if (mAdapter != null && !mUrl.isEmpty()) {
             PodcastFeedAPIClient client = PodcastFeedApiService.create("http://example.com");
-            client.getRss(mUrl).enqueue(new Callback<Rss>() {
+            client.getRssBody(mUrl).enqueue(new Callback<String>() {
                 @Override
-                public void onResponse(Call<Rss> call, Response<Rss> response) {
+                public void onResponse(Call<String> call, Response<String> response) {
                     if (response.isSuccessful()) {
-                        response.body().channel.items.forEach(item -> mAdapter.addItem(item));
-                        mAdapter.setChannel(response.body().channel);
+                        String body = response.body();
+
+                        Rss rss = null;
+                        try {
+                            rss = ser.read(Rss.class, body);
+                        } catch (Exception e) {
+                            Log.d("rssCliend", "error +"+ e.getMessage().toString());
+                        }
+
+                        rss.channel.items.forEach(item -> mAdapter.addItem(item));
+                        mAdapter.setChannel(rss.channel);
                         mAdapter.notifyDataSetChanged();
-                        Log.d("rssCliend", "load " + response.body().channel.items.size() );
+                        Log.d("rssCliend", "load " + rss.channel.items.size() );
                     } else {
                         try {
                             Log.d("rssCliend", "error +"+ response.errorBody().string().toString());
@@ -157,10 +172,11 @@ public class NewsFragment extends Fragment {
                 }
 
                 @Override
-                public void onFailure(Call<Rss> call, Throwable t) {
-                    Log.d("client", t.toString());
+                public void onFailure(Call<String> call, Throwable throwable) {
+
                 }
             });
+
 
         }
     }
