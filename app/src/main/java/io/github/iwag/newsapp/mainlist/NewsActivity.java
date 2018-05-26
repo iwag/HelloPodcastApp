@@ -54,13 +54,11 @@ public class NewsActivity extends Activity implements NewsFragment.OnListFragmen
                 return;
             }
 
-            // Create a new Fragment to be placed in the activity layout
-            NewsFragment firstFragment = new NewsFragment();
-            newsFragment = firstFragment;
+            PodcastChannel channel = (PodcastChannel) getIntent().getSerializableExtra("channel");
 
-            // In case this activity was started with special instructions from an
-            // Intent, pass the Intent's extras to the fragment as arguments
-            firstFragment.setArguments(getIntent().getExtras());
+            // Create a new Fragment to be placed in the activity layout
+            NewsFragment firstFragment = NewsFragment.newInstance(1, channel.url);
+            newsFragment = firstFragment;
 
             // Add the fragment to the 'fragment_container' FrameLayout
             getFragmentManager().beginTransaction()
@@ -137,8 +135,8 @@ public class NewsActivity extends Activity implements NewsFragment.OnListFragmen
 
     @Override
     public void onListFragmentInteraction(PodcastChannel item) {
-        NewsFragment firstFragment = NewsFragment.newInstance(1, item.url);
-        getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, firstFragment).commit();
+//        NewsFragment firstFragment = NewsFragment.newInstance(1, item.url);
+//        getFragmentManager().beginTransaction()
+//                .replace(R.id.fragment_container, firstFragment).commit();
     }
 }

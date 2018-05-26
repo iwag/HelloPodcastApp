@@ -1,6 +1,8 @@
 package io.github.iwag.newsapp.models;
 
-public class PodcastChannel {
+import java.io.Serializable;
+
+public class PodcastChannel implements Serializable {
     public int id;
     public String content;
     public String url;
