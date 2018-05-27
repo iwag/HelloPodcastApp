@@ -3,30 +3,14 @@ package io.github.iwag.newsapp.models;
 import java.io.Serializable;
 
 public class PodcastChannel implements Serializable {
-    public int id;
-    public String content;
+    public String id;
+    public String title;
     public String url;
 
-    public PodcastChannel(int i, String content, String s) {
+    public PodcastChannel(String i, String title, String url) {
         this.id = i;
-        this.content = content;
-        this.url = s;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+        this.title = title;
+        this.url = url;
     }
 
     public String getUrl() {

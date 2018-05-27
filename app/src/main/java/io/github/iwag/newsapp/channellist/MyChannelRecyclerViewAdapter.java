@@ -21,11 +21,11 @@ import java.util.List;
  */
 public class MyChannelRecyclerViewAdapter extends RecyclerView.Adapter<MyChannelRecyclerViewAdapter.ViewHolder> {
 
-    private final List<PodcastChannel> mValues;
+    private final ChannelListPresenter mPresenter;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyChannelRecyclerViewAdapter(List<PodcastChannel> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    public MyChannelRecyclerViewAdapter(ChannelListPresenter presenter, OnListFragmentInteractionListener listener) {
+        mPresenter = presenter;
         mListener = listener;
     }
 
@@ -38,8 +38,8 @@ public class MyChannelRecyclerViewAdapter extends RecyclerView.Adapter<MyChannel
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mItem = mPresenter.get(position);
+        holder.mContentView.setText(mPresenter.get(position).title);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +55,7 @@ public class MyChannelRecyclerViewAdapter extends RecyclerView.Adapter<MyChannel
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mPresenter.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

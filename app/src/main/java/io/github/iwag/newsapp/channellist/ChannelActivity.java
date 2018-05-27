@@ -1,8 +1,10 @@
 package io.github.iwag.newsapp.channellist;
 
+import android.support.v4.app.ActivityCompat;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
@@ -15,7 +17,7 @@ import io.github.iwag.newsapp.mainlist.NewsActivity;
 import io.github.iwag.newsapp.mainlist.NewsFragment;
 import io.github.iwag.newsapp.models.PodcastChannel;
 
-public class ChannelActivity extends Activity implements ChannelFragment.OnListFragmentInteractionListener{
+public class ChannelActivity extends AppCompatActivity implements ChannelFragment.OnListFragmentInteractionListener{
 
     public static final String RESULT_NEW_NEWS = "aaa";
     public static final String RESULT_EMPTY = "empty";
@@ -45,7 +47,7 @@ public class ChannelActivity extends Activity implements ChannelFragment.OnListF
             firstFragment.setArguments(getIntent().getExtras());
 
             // Add the fragment to the 'fragment_container' FrameLayout
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container3, firstFragment).commit();
         }
 

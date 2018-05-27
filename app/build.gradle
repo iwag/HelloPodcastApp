@@ -64,6 +64,10 @@ dependencies {
     compile 'com.android.support:design:26.+'
     compile 'com.google.firebase:firebase-firestore:11.8.0'
 
+    def lifecycle_version = "1.1.1"
+
+    // ViewModel and LiveData
+    compile "android.arch.lifecycle:extensions:$lifecycle_version"
 }
 
 apply plugin: 'com.google.gms.google-services'

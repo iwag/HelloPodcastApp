@@ -1,8 +1,10 @@
 package io.github.iwag.newsapp.channellist;
 
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,13 +25,16 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class ChannelFragment extends Fragment {
+public class ChannelFragment extends Fragment implements ChannelListContract.View{
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+
+    private MyChannelRecyclerViewAdapter mAdapter;
+    private ChannelListPresenter mPresenter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -55,6 +60,7 @@ public class ChannelFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+
     }
 
     @Override
@@ -72,10 +78,15 @@ public class ChannelFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             List<PodcastChannel> list = new LinkedList<>();
-            list.add(new PodcastChannel(0, "Rebuild FM", "http://rebuild.fm/feed.xml"));
-            list.add(new PodcastChannel(1, "Soussune", "https://soussune.com/feed.xml"));
-            list.add(new PodcastChannel(2, "tcfm", "https://feeds.turingcomplete.fm/tcfm"));
-            recyclerView.setAdapter(new MyChannelRecyclerViewAdapter(list, mListener));
+//            list.add(new PodcastChannel(0, "Rebuild FM", "http://rebuild.fm/feed.xml"));
+//            list.add(new PodcastChannel(1, "Soussune", "https://soussune.com/feed.xml"));
+//            list.add(new PodcastChannel(2, "tcfm", "https://feeds.turingcomplete.fm/tcfm"));
+
+            mPresenter = new ChannelListPresenter(this, this);
+            mAdapter = new MyChannelRecyclerViewAdapter(mPresenter, mListener);
+
+
+            recyclerView.setAdapter(mAdapter);
         }
         return view;
     }
@@ -96,6 +107,11 @@ public class ChannelFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void notifyDataChanged() {
+        mAdapter.notifyDataSetChanged();
     }
 
     /**
