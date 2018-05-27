@@ -19,8 +19,6 @@ import io.github.iwag.newsapp.player.PlayerActivity;
 import io.github.iwag.newsapp.service.DownloadService;
 
 public class NewsActivity extends AppCompatActivity implements NewsFragment.OnListFragmentInteractionListener, ChannelFragment.OnListFragmentInteractionListener {
-    public static final int RESULT_NEW_NEWS_REQUEST = 0;
-    public static final int RESULT_DETAIL_NEWS_REQUEST = 1;
     public static final int RESULT_START_MUSIC = 2;
 
     private static final String ICON_URL = "https://scontent-sea1-1.cdninstagram.com/t51.2885-19/s320x320/22280759_695713487292785_369321441759330304_n.jpg";
@@ -67,29 +65,6 @@ public class NewsActivity extends AppCompatActivity implements NewsFragment.OnLi
         }
     }
 
-    public void doAdd(View view) {
-        Intent intent = new Intent(this, NewNewsActivity.class);
-
-        Long timestamp = null;
-        try {
-            timestamp = (new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z")).parse(DATE_STRING).getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        intent.putExtra(NewNewsFragment.DATA_USER, USER);
-        intent.putExtra(NewNewsFragment.DATA_DATE, timestamp);
-        intent.putExtra(NewNewsFragment.DATA_BODY, BODY);
-        intent.putExtra(NewNewsFragment.DATA_ICON_URL, ICON_URL);
-        intent.putExtra(NewNewsFragment.DATA_IMAGE_URL1, IMAGE_URL1);
-        intent.putExtra(NewNewsFragment.DATA_IMAGE_URL2, IMAGE_URL2);
-        intent.putExtra(NewNewsFragment.DATA_LIKES, 2);
-        intent.putExtra(NewNewsFragment.DATA_COMMENTS, 3);
-
-
-        startActivityForResult(intent, RESULT_NEW_NEWS_REQUEST);
-    }
-
     public void doLoad(View view) {
         ChannelFragment firstFragment = ChannelFragment.newInstance(1);
         getSupportFragmentManager().beginTransaction()
@@ -129,9 +104,7 @@ public class NewsActivity extends AppCompatActivity implements NewsFragment.OnLi
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Make sure the request was successful
-        if (requestCode == RESULT_NEW_NEWS_REQUEST && resultCode == RESULT_OK) {
-        }
+
     }
 
     @Override

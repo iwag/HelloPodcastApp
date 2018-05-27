@@ -1,28 +1,28 @@
 package io.github.iwag.newsapp.channellist;
 
-import android.support.v4.app.ActivityCompat;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 
-import java.util.Objects;
-
-import io.github.iwag.newsapp.MainActivity;
 import io.github.iwag.newsapp.R;
-import io.github.iwag.newsapp.mainlist.NewNewsFragment;
+import io.github.iwag.newsapp.mainlist.NewChannelFragment;
 import io.github.iwag.newsapp.mainlist.NewsActivity;
-import io.github.iwag.newsapp.mainlist.NewsFragment;
 import io.github.iwag.newsapp.models.PodcastChannel;
 
-public class ChannelActivity extends AppCompatActivity implements ChannelFragment.OnListFragmentInteractionListener{
+public class ChannelActivity extends AppCompatActivity implements ChannelFragment.OnListFragmentInteractionListener, NewChannelFragment.NewChannelInteraction{
+    public static final int RESULT_NEW_PODCAST = 0;
 
     public static final String RESULT_NEW_NEWS = "aaa";
     public static final String RESULT_EMPTY = "empty";
 
-    private Bundle mBundle;
+
+    private final FireChannelRepository channelRepository;
+
+    public ChannelActivity() {
+        channelRepository = new FireChannelRepository();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +54,23 @@ public class ChannelActivity extends AppCompatActivity implements ChannelFragmen
     }
 
 
+    public void doAdd(View view) {
+        Fragment fragment = new NewChannelFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container3, fragment).addToBackStack(null).commit();
+    }
+
+
     @Override
     public void onListFragmentInteraction(PodcastChannel item) {
         Intent intent = new Intent(this, NewsActivity.class);
         intent.putExtra("channel", item);
         startActivity(intent);
+    }
+
+    @Override
+    public void saveNewChannel(String title, String url) {
+        channelRepository.add(title, url);
+        getSupportFragmentManager().popBackStackImmediate();
     }
 }

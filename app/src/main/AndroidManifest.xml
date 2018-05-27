@@ -25,7 +25,6 @@
         <activity android:name=".channellist.ChannelActivity" />
 
         <activity android:name=".player.PlayerActivity" />
-        <activity android:name=".mainlist.NewNewsActivity"></activity>
     </application>
 
 </manifest>
