@@ -2,6 +2,7 @@ package io.github.iwag.newsapp.channellist;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -19,6 +20,7 @@ public class ChannelActivity extends AppCompatActivity implements ChannelFragmen
 
 
     private final FireChannelRepository channelRepository;
+    private FloatingActionButton mPlusButton;
 
     public ChannelActivity() {
         channelRepository = new FireChannelRepository();
@@ -28,6 +30,9 @@ public class ChannelActivity extends AppCompatActivity implements ChannelFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_channel);
+
+        mPlusButton = findViewById(R.id.floatingActionButton);
+
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
         if (findViewById(R.id.fragment_container3) != null) {
@@ -58,6 +63,7 @@ public class ChannelActivity extends AppCompatActivity implements ChannelFragmen
         Fragment fragment = new NewChannelFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container3, fragment).addToBackStack(null).commit();
+        mPlusButton.setVisibility(View.INVISIBLE);
     }
 
 
@@ -72,5 +78,7 @@ public class ChannelActivity extends AppCompatActivity implements ChannelFragmen
     public void saveNewChannel(String title, String url) {
         channelRepository.add(title, url);
         getSupportFragmentManager().popBackStackImmediate();
+        mPlusButton.setVisibility(View.VISIBLE);
+
     }
 }
