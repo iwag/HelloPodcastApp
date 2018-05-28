@@ -92,6 +92,10 @@ public class ChannelActivity extends AppCompatActivity implements ChannelFragmen
 
     @Override
     public void onListFragmentInteraction(FeedItem item, Channel channel) {
-        play(item, channel.itunesImage.getHref());
+       // play(item, channel.itunesImage.getHref());
+
+        Intent intent = new Intent(this, BrowserActivity.class);
+        intent.putExtra("url", item.link);
+        startActivity(intent);
     }
 }
