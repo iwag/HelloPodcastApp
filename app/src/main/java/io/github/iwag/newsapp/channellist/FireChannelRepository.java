@@ -37,42 +37,54 @@ public class FireChannelRepository {
 
     LiveData<List<PodcastChannel>> getChannelList() {
         MutableLiveData<List<PodcastChannel>> liveData = new MutableLiveData<>();
+        liveData.setValue(new LinkedList<>());
 
-        db.collection("channels").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    LinkedList<PodcastChannel> channelList = new LinkedList<>();
-                    for (DocumentSnapshot doc : task.getResult()) {
-                        channelList.add(new PodcastChannel(doc.getId(), doc.get("title").toString(),  doc.get("url").toString()));
-                    }
-                    if (!channelList.isEmpty()) {
-                        liveData.setValue(channelList);
-                    }
-                } else {
-                    Log.d(TAG, "Error",  task.getException());
-                }
-            }
-        });
-
-        // this is ideal form but hard to implement with diff
-//        ListenerRegistration registration = db.collection("channels").addSnapshotListener(new EventListener<QuerySnapshot>() {
+//        db.collection("channels").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
 //            @Override
-//            public void onEvent(QuerySnapshot snapshots, FirebaseFirestoreException e) {
-//                if (e != null) {
-//                    Log.w(TAG, "listen:error", e);
-//                    return;
-//                }
-//
-//                for (DocumentChange dc : snapshots.getDocumentChanges()) {
-//                   if (dc.getType() == DocumentChange.Type.ADDED) {
-//                        Log.d(TAG, "New city: " + dc.getDocument().getData());
-//                    } else if (dc.getType() == DocumentChange.Type.REMOVED) {
-//
-//                   }
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    LinkedList<PodcastChannel> channelList = new LinkedList<>();
+//                    for (DocumentSnapshot doc : task.getResult()) {
+//                        channelList.add(new PodcastChannel(doc.getId(), doc.get("title").toString(),  doc.get("url").toString()));
+//                    }
+//                    if (!channelList.isEmpty()) {
+//                        List<PodcastChannel> list = liveData.getValue();
+//                        liveData.setValue(channelList);
+//                    }
+//                } else {
+//                    Log.d(TAG, "Error",  task.getException());
 //                }
 //            }
 //        });
+
+        // this is ideal form but hard to implement with diff
+        ListenerRegistration registration = db.collection("channels").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot snapshots, FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w(TAG, "listen:error", e);
+                    return;
+                }
+                LinkedList<PodcastChannel> channelList = new LinkedList<>();
+                for (DocumentChange dc : snapshots.getDocumentChanges()) {
+                   if (dc.getType() == DocumentChange.Type.ADDED && dc.getDocument().exists()) {
+                       DocumentSnapshot doc = dc.getDocument();
+                       if (doc.get("title") == null || doc.get("url") == null) {
+                           continue;
+                       }
+                        channelList.add(new PodcastChannel(doc.getId(), doc.get("title").toString(),  doc.get("url").toString()));
+                        Log.d(TAG, "ADDED " + doc.getId() + " " + doc.getData()); // + " " + doc.getData().get("title") + " " + doc.getData().get("url"));
+                    } else if (dc.getType() == DocumentChange.Type.REMOVED) {
+
+                   }
+                }
+                if (!channelList.isEmpty()) {
+                    List<PodcastChannel> list = liveData.getValue();
+                    list.addAll(channelList);
+                    liveData.setValue(list);
+                }
+            }
+        });
 
         return liveData;
     }
