@@ -8,11 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import io.github.iwag.newsapp.R;
+import io.github.iwag.newsapp.mainlist.ChannelActivity;
 import io.github.iwag.newsapp.mainlist.NewChannelFragment;
-import io.github.iwag.newsapp.mainlist.NewsActivity;
 import io.github.iwag.newsapp.models.PodcastChannel;
 
-public class ChannelActivity extends AppCompatActivity implements ChannelFragment.OnListFragmentInteractionListener, NewChannelFragment.NewChannelInteraction{
+public class ChannelListActivity extends AppCompatActivity implements ChannelListFragment.OnListFragmentInteractionListener, NewChannelFragment.NewChannelInteraction{
     public static final int RESULT_NEW_PODCAST = 0;
 
     public static final String RESULT_NEW_NEWS = "aaa";
@@ -22,14 +22,14 @@ public class ChannelActivity extends AppCompatActivity implements ChannelFragmen
     private final FireChannelRepository channelRepository;
     private FloatingActionButton mPlusButton;
 
-    public ChannelActivity() {
+    public ChannelListActivity() {
         channelRepository = new FireChannelRepository();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_channel);
+        setContentView(R.layout.activity_channel_list);
 
         mPlusButton = findViewById(R.id.floatingActionButton);
 
@@ -44,7 +44,7 @@ public class ChannelActivity extends AppCompatActivity implements ChannelFragmen
                 return;
             }
 
-            ChannelFragment firstFragment = ChannelFragment.newInstance(1);
+            ChannelListFragment firstFragment = ChannelListFragment.newInstance(1);
 
             // In case this activity was started with special instructions from an
             // Intent, pass the Intent's extras to the fragment as arguments
@@ -69,7 +69,7 @@ public class ChannelActivity extends AppCompatActivity implements ChannelFragmen
 
     @Override
     public void onListFragmentInteraction(PodcastChannel item) {
-        Intent intent = new Intent(this, NewsActivity.class);
+        Intent intent = new Intent(this, ChannelActivity.class);
         intent.putExtra("channel", item);
         startActivity(intent);
     }

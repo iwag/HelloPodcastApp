@@ -8,10 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import io.github.iwag.newsapp.R;
-import io.github.iwag.newsapp.channellist.ChannelFragment.OnListFragmentInteractionListener;
+import io.github.iwag.newsapp.channellist.ChannelListFragment.OnListFragmentInteractionListener;
 import io.github.iwag.newsapp.models.PodcastChannel;
-
-import java.util.List;
 
 
 /**

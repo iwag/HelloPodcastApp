@@ -18,6 +18,7 @@ import org.simpleframework.xml.core.Persister;
 import io.github.iwag.newsapp.R;
 import io.github.iwag.newsapp.infra.PodcastFeedAPIClient;
 import io.github.iwag.newsapp.infra.PodcastFeedApiService;
+import io.github.iwag.newsapp.models.Channel;
 import io.github.iwag.newsapp.models.FeedItem;
 import io.github.iwag.newsapp.models.Rss;
 import retrofit2.Call;
@@ -33,7 +34,7 @@ import java.util.LinkedList;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class NewsFragment extends Fragment {
+public class ChannelFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -41,24 +42,24 @@ public class NewsFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    private NewsRecyclerViewAdapter mAdapter;
+    private EpisodesRecyclerViewAdapter mAdapter;
     private final int LOAD_COUNT = 10;
     private String mUrl = "";
 
     private static Serializer ser = new Persister(new AnnotationStrategy());
 
-    public interface NewsFragmentClickListener {
+    public interface ChannelFragmentClickListener {
         void onClick(View view, int position);
 
         void onLongClick(View view, int position);
     }
 
-    public NewsFragment() {
+    public ChannelFragment() {
     }
 
     @SuppressWarnings("unused")
-    public static NewsFragment newInstance(int columnCount, String url) {
-        NewsFragment fragment = new NewsFragment();
+    public static ChannelFragment newInstance(int columnCount, String url) {
+        ChannelFragment fragment = new ChannelFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         args.putString(ARG_URL, url);
@@ -79,7 +80,7 @@ public class NewsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_news_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_channel_episode_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -88,22 +89,21 @@ public class NewsFragment extends Fragment {
             GridLayoutManager manager = new GridLayoutManager(context, mColumnCount);
             recyclerView.setLayoutManager(manager);
 
-//            mAdapter = new NewsRecyclerViewAdapter(getContext(), new LinkedList<NewsItem>(), mListener);
+//            mAdapter = new EpisodesRecyclerViewAdapter(getContext(), new LinkedList<NewsItem>(), mListener);
 //            mAdapter.setLayoutManager(manager);
 //            mAdapter.shouldShowHeadersForEmptySections(true);
 //            mAdapter.shouldShowFooters(true);
 //            recyclerView.setAdapter(mAdapter);
 
-            mAdapter = new NewsRecyclerViewAdapter(getContext(), new LinkedList<FeedItem>(), mListener);
+            mAdapter = new EpisodesRecyclerViewAdapter(getContext(), new LinkedList<FeedItem>(), mListener);
 
             recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
-            recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new NewsFragmentClickListener() {
+            recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new ChannelFragmentClickListener() {
                 @Override
                 public void onClick(View view, int position) {
                     FeedItem item = mAdapter.getNews(position);
-                    NewsActivity parent = (NewsActivity)getActivity();
-                    parent.play(item, mAdapter.getChannel().itunesImage.getHref());
+                    mListener.onListFragmentInteraction(item, mAdapter.getChannel());
                 }
 
                 @Override
@@ -114,7 +114,7 @@ public class NewsFragment extends Fragment {
 
             recyclerView.setAdapter(mAdapter);
 
-            loadNews();
+            loadPodcastRss();
 
         }
         return view;
@@ -142,7 +142,7 @@ public class NewsFragment extends Fragment {
         mAdapter.notifyDataSetChanged();
     }
 
-    public void loadNews() {
+    public void loadPodcastRss() {
         if (mAdapter != null && !mUrl.isEmpty()) {
             PodcastFeedAPIClient client = PodcastFeedApiService.create("http://example.com");
             client.getRssBody(mUrl).enqueue(new Callback<String>() {
@@ -193,6 +193,6 @@ public class NewsFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(FeedItem item);
+        void onListFragmentInteraction(FeedItem item, Channel channel);
     }
 }

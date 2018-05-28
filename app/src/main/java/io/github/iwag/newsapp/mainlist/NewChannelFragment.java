@@ -2,25 +2,16 @@ package io.github.iwag.newsapp.mainlist;
 
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import io.github.iwag.newsapp.R;
-import io.github.iwag.newsapp.channellist.ChannelFragment;
-import io.github.iwag.newsapp.channellist.FireChannelRepository;
-import io.github.iwag.newsapp.models.PodcastChannel;
 
 
 /**

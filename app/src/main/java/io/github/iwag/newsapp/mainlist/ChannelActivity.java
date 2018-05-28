@@ -1,24 +1,21 @@
 package io.github.iwag.newsapp.mainlist;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
+import io.github.iwag.newsapp.BrowserActivity;
 import io.github.iwag.newsapp.R;
-import io.github.iwag.newsapp.channellist.ChannelFragment;
+import io.github.iwag.newsapp.channellist.ChannelListFragment;
 import io.github.iwag.newsapp.models.Channel;
 import io.github.iwag.newsapp.models.FeedItem;
 import io.github.iwag.newsapp.models.PodcastChannel;
 import io.github.iwag.newsapp.player.PlayerActivity;
 import io.github.iwag.newsapp.service.DownloadService;
 
-public class NewsActivity extends AppCompatActivity implements NewsFragment.OnListFragmentInteractionListener, ChannelFragment.OnListFragmentInteractionListener {
+public class ChannelActivity extends AppCompatActivity implements ChannelFragment.OnListFragmentInteractionListener {
     public static final int RESULT_START_MUSIC = 2;
 
     private static final String ICON_URL = "https://scontent-sea1-1.cdninstagram.com/t51.2885-19/s320x320/22280759_695713487292785_369321441759330304_n.jpg";
@@ -30,7 +27,6 @@ public class NewsActivity extends AppCompatActivity implements NewsFragment.OnLi
 
     private Long mDownloadId;
 
-    NewsFragment newsFragment;
     private DownloadService mDownloadService;
 
     @Override
@@ -56,8 +52,7 @@ public class NewsActivity extends AppCompatActivity implements NewsFragment.OnLi
             PodcastChannel channel = (PodcastChannel) getIntent().getSerializableExtra("channel");
 
             // Create a new Fragment to be placed in the activity layout
-            NewsFragment firstFragment = NewsFragment.newInstance(1, channel.url);
-            newsFragment = firstFragment;
+            ChannelFragment firstFragment = ChannelFragment.newInstance(1, channel.url);
 
             // Add the fragment to the 'fragment_container' FrameLayout
             getFragmentManager().beginTransaction()
@@ -66,21 +61,9 @@ public class NewsActivity extends AppCompatActivity implements NewsFragment.OnLi
     }
 
     public void doLoad(View view) {
-        ChannelFragment firstFragment = ChannelFragment.newInstance(1);
+        ChannelListFragment firstFragment = ChannelListFragment.newInstance(1);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, firstFragment).commit();
-    }
-
-    public void doLoad2(View view) {
-        if (newsFragment!=null) {
-            newsFragment.loadNews();
-        }
-    }
-
-
-    @Override
-    public void onListFragmentInteraction(FeedItem item) {
-        onActivityResult(0, 0, null);
     }
 
     public void play(FeedItem item, String imageUrl) {
@@ -108,9 +91,7 @@ public class NewsActivity extends AppCompatActivity implements NewsFragment.OnLi
     }
 
     @Override
-    public void onListFragmentInteraction(PodcastChannel item) {
-//        NewsFragment firstFragment = NewsFragment.newInstance(1, item.url);
-//        getFragmentManager().beginTransaction()
-//                .replace(R.id.fragment_container, firstFragment).commit();
+    public void onListFragmentInteraction(FeedItem item, Channel channel) {
+        play(item, channel.itunesImage.getHref());
     }
 }

@@ -24,18 +24,18 @@ import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link FeedItem} and makes a call to the
- * specified {@link NewsFragment.OnListFragmentInteractionListener}.
+ * specified {@link ChannelFragment.OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerViewAdapter.ViewHolder> {
+public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRecyclerViewAdapter.ViewHolder> {
 
     private final Context mContext;
     private final List<FeedItem> mValues;
     private Channel mChannel;
-    private final NewsFragment.OnListFragmentInteractionListener mListener;
+    private final ChannelFragment.OnListFragmentInteractionListener mListener;
     private String channel;
 
-    public NewsRecyclerViewAdapter(Context context, List<FeedItem> items, NewsFragment.OnListFragmentInteractionListener listener) {
+    public EpisodesRecyclerViewAdapter(Context context, List<FeedItem> items, ChannelFragment.OnListFragmentInteractionListener listener) {
         mContext = context;
         mValues = items;
         mChannel = null;
@@ -126,14 +126,14 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         holder.mLikesView.setText(holder.mItem.duration);
 //        holder.mCommentsView.setText("Comments:"+holder.mItem.comments);
 
-        holder.mView.setOnClickListener(v -> {
-            if (null != mListener) {
-                // Notify the active callbacks interface (the activity, if the
-                // fragment is attached to one) that an item has been selected.
-                mListener.onListFragmentInteraction(holder.mItem);
-
-            }
-        });
+//        holder.mView.setOnClickListener(v -> {
+//            if (null != mListener) {
+//                // Notify the active callbacks interface (the activity, if the
+//                // fragment is attached to one) that an item has been selected.
+//                mListener.onListFragmentInteraction(holder.mItem, );
+//
+//            }
+//        });
     }
 
     @Override

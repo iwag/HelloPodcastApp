@@ -20,9 +20,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".mainlist.NewsActivity" />
+        <activity android:name=".mainlist.ChannelActivity" />
         <activity android:name=".BrowserActivity" />
-        <activity android:name=".channellist.ChannelActivity" />
+        <activity android:name=".channellist.ChannelListActivity" />
 
         <activity android:name=".player.PlayerActivity" />
     </application>
