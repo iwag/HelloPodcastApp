@@ -32,7 +32,7 @@ public class ChannelActivity extends AppCompatActivity implements ChannelFragmen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_news);
+        setContentView(R.layout.activity_channel);
 
         mDownloadId = null;
         mDownloadService = new DownloadService();
