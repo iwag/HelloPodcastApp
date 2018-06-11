@@ -23,7 +23,7 @@ public final class FeedItem {
     @Element(name = "pubDate", required = false)
     public String pubDate;
 
-    @Element(name = "link")
+    @Element(name = "link", required = false)
     public String link;
 
     @Namespace(reference = "http://www.itunes.com/dtds/podcast-1.0.dtd")

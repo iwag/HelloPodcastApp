@@ -156,6 +156,7 @@ public class ChannelFragment extends Fragment {
                             rss = ser.read(Rss.class, body);
                         } catch (Exception e) {
                             Log.d("rssCliend", "error +"+ e.getMessage().toString());
+                            return;
                         }
 
                         rss.channel.items.forEach(item -> mAdapter.addItem(item));
