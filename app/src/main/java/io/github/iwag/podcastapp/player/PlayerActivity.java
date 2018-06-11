@@ -28,7 +28,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import io.github.iwag.podcastapp.R;
+import io.github.iwag.podcastapp.models.FeedItem;
 
 /**
  * Allows playback of a single MP3 file via the UI. It contains a {@link MediaPlayerHolder}
@@ -41,18 +44,23 @@ public final class PlayerActivity extends Activity {
     public static final int MEDIA_RES_ID = 0; // R.raw.jazz_in_paris;
 
     private ImageView mImageView;
+    private TextView mTitleView;
+    private TextView mDescView;
     private SeekBar mSeekbarAudio;
-    private ScrollView mScrollContainer;
     private PlayerAdapter mPlayerAdapter;
     private boolean mUserIsSeeking = false;
     private Uri mMusicUrl;
     private Uri mImageUrl;
+    private String mTitle;
+    private String mDesc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_activity_main);
-        mMusicUrl = Uri.parse(getIntent().getStringExtra("url"));
+        mTitle = getIntent().getStringExtra("title");
+        mDesc = getIntent().getStringExtra("desc");
+        mMusicUrl =  Uri.parse(getIntent().getStringExtra("music_url"));
         mImageUrl = Uri.parse(getIntent().getStringExtra("image_url"));
 
         initializeUI();
@@ -83,11 +91,15 @@ public final class PlayerActivity extends Activity {
         mImageView = (ImageView) findViewById(R.id.player_image);
         Picasso.with(getBaseContext()).load(mImageUrl).placeholder(R.mipmap.ic_launcher).into(mImageView);
 
+        mTitleView = (TextView) findViewById(R.id.player_title);
+        mTitleView.setText(mTitle);
+        mDescView = (TextView) findViewById(R.id.player_desc);
+        mDescView.setText(mDesc);
+
         Button mPlayButton = (Button) findViewById(R.id.button_play);
         Button mPauseButton = (Button) findViewById(R.id.button_pause);
         Button mResetButton = (Button) findViewById(R.id.button_reset);
         mSeekbarAudio = (SeekBar) findViewById(R.id.seekbar_audio);
-        mScrollContainer = (ScrollView) findViewById(R.id.scroll_container);
 
         mPauseButton.setOnClickListener(view -> mPlayerAdapter.pause());
         mPlayButton.setOnClickListener(view -> mPlayerAdapter.play());

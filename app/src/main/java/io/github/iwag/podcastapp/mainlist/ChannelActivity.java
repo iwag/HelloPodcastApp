@@ -73,12 +73,14 @@ public class ChannelActivity extends AppCompatActivity implements ChannelFragmen
             Long id = mDownloadService.downloadFile(this, item.title, item.enclosure.url);
             mDownloadId = id;
         }
-        Intent intent = new Intent(this, PlayerActivity.class);
         if (mDownloadId != null) {
             Uri uri = mDownloadService.getDownloadUri(this, mDownloadId);
             if (uri == null) return;
+            Intent intent = new Intent(this, PlayerActivity.class);
+            intent.putExtra("music_url", item.enclosure.url);
+            intent.putExtra("title", item.title);
+            intent.putExtra("desc", item.description);
             intent.putExtra("image_url", imageUrl);
-            intent.putExtra("url", uri.toString());
             mDownloadId = null;
             startActivityForResult(intent, RESULT_START_MUSIC);
         }
@@ -92,10 +94,12 @@ public class ChannelActivity extends AppCompatActivity implements ChannelFragmen
 
     @Override
     public void onListFragmentInteraction(FeedItem item, Channel channel) {
-       // play(item, channel.itunesImage.getHref());
-
-        Intent intent = new Intent(this, BrowserActivity.class);
-        intent.putExtra("url", item.link);
-        startActivity(intent);
+        if (item.link != null) {
+            Intent intent = new Intent(this, BrowserActivity.class);
+            intent.putExtra("url", item.link);
+            startActivity(intent);
+        } else {
+             play(item, channel.itunesImage.getHref());
+        }
     }
 }

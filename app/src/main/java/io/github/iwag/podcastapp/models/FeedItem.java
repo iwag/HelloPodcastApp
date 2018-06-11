@@ -6,6 +6,8 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Namespace;
 import org.simpleframework.xml.Root;
 
+import java.io.Serializable;
+
 
 @Root(name = "item", strict = false)
 public final class FeedItem {
